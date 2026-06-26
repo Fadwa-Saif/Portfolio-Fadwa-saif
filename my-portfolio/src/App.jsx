@@ -246,6 +246,213 @@ function ParticleCanvas() {
   );
 }
 
+// ─── MARQUEE ──────────────────────────────────────────────────────────────────
+function Marquee() {
+  const words = [
+    "Full Stack",
+    "Casablanca",
+    "Builder",
+    "React.js",
+    "Spring Boot",
+    "Laravel",
+    "Ship It",
+    "Problem Solver",
+    "Python",
+    "Groq AI",
+    "MongoDB",
+    "Machine Learning",
+  ];
+  const all = [...words, ...words];
+  return (
+    <div
+      style={{
+        overflow: "hidden",
+        borderTop: `1px solid ${C.border}`,
+        borderBottom: `1px solid ${C.border}`,
+        padding: "13px 0",
+        background: C.surface,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          width: "max-content",
+          animation: "marqueeScroll 26s linear infinite",
+        }}
+      >
+        {all.map((w, i) => (
+          <span
+            key={i}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              fontFamily: T.mono,
+              fontSize: 11,
+              color: C.textSec,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              padding: "0 18px",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {w}
+            <span
+              style={{
+                color: C.accent,
+                marginLeft: 18,
+                fontSize: 13,
+                animation: `shimmer 3s ease-in-out infinite`,
+                animationDelay: `${(i % words.length) * 0.25}s`,
+                display: "inline-block",
+              }}
+            >
+              ✦
+            </span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── GEOMETRIC ART ────────────────────────────────────────────────────────────
+function GeometricArt() {
+  const cx = 170,
+    cy = 170;
+  const radii = [38, 76, 114, 152, 190];
+  const axisAng = [0, 90, 180, 270];
+
+  return (
+    <svg
+      viewBox="0 0 340 340"
+      style={{
+        position: "absolute",
+        right: "4%",
+        top: "50%",
+        transform: "translateY(-50%)",
+        width: "min(320px, 38vw)",
+        height: "auto",
+        opacity: 0.15,
+        pointerEvents: "none",
+        zIndex: 0,
+      }}
+    >
+      {/* Background grid */}
+      {[68, 136, 204, 272].map((v) => (
+        <g key={v}>
+          <line
+            x1={v}
+            y1={0}
+            x2={v}
+            y2={340}
+            stroke="#8B5CF6"
+            strokeWidth="0.35"
+          />
+          <line
+            x1={0}
+            y1={v}
+            x2={340}
+            y2={v}
+            stroke="#8B5CF6"
+            strokeWidth="0.35"
+          />
+        </g>
+      ))}
+      <line
+        x1={170}
+        y1={0}
+        x2={170}
+        y2={340}
+        stroke="#8B5CF6"
+        strokeWidth="0.6"
+      />
+      <line
+        x1={0}
+        y1={170}
+        x2={340}
+        y2={170}
+        stroke="#8B5CF6"
+        strokeWidth="0.6"
+      />
+
+      {/* Concentric circles */}
+      {radii.map((r, i) => (
+        <circle
+          key={r}
+          cx={cx}
+          cy={cy}
+          r={r}
+          fill="none"
+          stroke="#8B5CF6"
+          strokeWidth={i === 2 ? 0.9 : 0.4}
+          strokeOpacity={0.7 - i * 0.1}
+        />
+      ))}
+
+      {/* Outer dashed ring */}
+      <circle
+        cx={cx}
+        cy={cy}
+        r={200}
+        fill="none"
+        stroke="#8B5CF6"
+        strokeWidth={0.3}
+        strokeOpacity={0.3}
+        strokeDasharray="3 9"
+      />
+
+      {/* Dots at ring–axis intersections */}
+      {radii.map((r) =>
+        axisAng.map((a) => {
+          const rad = (a * Math.PI) / 180;
+          return (
+            <circle
+              key={`${r}-${a}`}
+              cx={cx + r * Math.cos(rad)}
+              cy={cy + r * Math.sin(rad)}
+              r={2}
+              fill="#A78BFA"
+              opacity={0.85}
+            />
+          );
+        }),
+      )}
+
+      {/* Diagonal cross hair */}
+      <line
+        x1={80}
+        y1={80}
+        x2={260}
+        y2={260}
+        stroke="#8B5CF6"
+        strokeWidth="0.3"
+        strokeOpacity="0.3"
+      />
+      <line
+        x1={260}
+        y1={80}
+        x2={80}
+        y2={260}
+        stroke="#8B5CF6"
+        strokeWidth="0.3"
+        strokeOpacity="0.3"
+      />
+
+      {/* Centre dot */}
+      <circle cx={cx} cy={cy} r={4} fill="#8B5CF6" opacity={1} />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={8}
+        fill="none"
+        stroke="#8B5CF6"
+        strokeWidth={0.6}
+        opacity={0.6}
+      />
+    </svg>
+  );
+}
+
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 function Label({ children }) {
   return (
