@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 // ─── THEME — "SAIF-OS" (dark 2000s desktop / tech-ad chrome) ────────────────
 const C = {
@@ -113,14 +113,14 @@ const CERTS = [
   },
   {
     name: "Machine Learning",
-    issuer: "ISGI Casablanca — OFPPT",
+    issuer: "TBD",
     desc: "Fundamentals of ML - neural networks, transfer learning, model evaluation.",
     link: null,
     status: "incoming",
     year: "Aug 2026",
   },
   {
-    name: "Entrepreneurial Innovation Program",
+    name: "Entrepreneurship",
     issuer: "OFPPT × UM6P",
     desc: "Entrepreneurship program co-organized by OFPPT and Mohammed VI Polytechnic University.",
     link: null,
@@ -141,36 +141,20 @@ const NAV = [
 const NAV_ALL = [{ label: "Desktop", id: "desktop", icon: "disk" }, ...NAV];
 
 const DESKTOP_ICONS = [
-  { id: "about", label: "About_Me.txt", icon: "doc", top: "13%", left: "7%" },
-  { id: "skills", label: "Skills.sys", icon: "gear", top: "70%", left: "9%" },
-  {
-    id: "projects",
-    label: "Projects",
-    icon: "folder",
-    top: "18%",
-    left: "88%",
-  },
-  {
-    id: "contact",
-    label: "Contact.exe",
-    icon: "mail",
-    top: "74%",
-    left: "87%",
-  },
+  { id: "about", label: "About_Me.txt", icon: "doc" },
+  { id: "skills", label: "Skills.sys", icon: "gear" },
+  { id: "projects", label: "Projects", icon: "folder" },
+  { id: "contact", label: "Contact.exe", icon: "mail" },
   {
     id: "gh",
     label: "GitHub.lnk",
     icon: "link",
-    top: "45%",
-    left: "4.5%",
     href: "https://github.com/Fadwa-Saif",
   },
   {
     id: "li",
     label: "LinkedIn.lnk",
     icon: "link",
-    top: "46%",
-    left: "91%",
     href: "https://www.linkedin.com/in/fadwa-saif-a7280922b/",
   },
 ];
@@ -369,120 +353,206 @@ function ChipBadge({ size = 60 }) {
   );
 }
 
-// ─── CIRCUIT-BOARD WALLPAPER ──────────────────────────────────────────────────
-function CircuitGrid() {
-  const canvasRef = useRef(null);
+// ─── Y2K WALLPAPER (abstract chrome wisps, swirl, sparkle dust) ──────────────
+const SPARKLES = [
+  { x: 120, y: 90, r: 2, delay: "0s" },
+  { x: 260, y: 220, r: 1.6, delay: "0.6s" },
+  { x: 80, y: 400, r: 2.2, delay: "1.2s" },
+  { x: 340, y: 560, r: 1.4, delay: "1.8s" },
+  { x: 520, y: 120, r: 2, delay: "0.3s" },
+  { x: 650, y: 340, r: 1.8, delay: "2.1s" },
+  { x: 780, y: 60, r: 1.5, delay: "1.5s" },
+  { x: 900, y: 420, r: 2.4, delay: "0.9s" },
+  { x: 1020, y: 220, r: 1.6, delay: "2.6s" },
+  { x: 1120, y: 520, r: 2, delay: "1.1s" },
+  { x: 200, y: 650, r: 1.8, delay: "2.9s" },
+  { x: 460, y: 700, r: 1.4, delay: "0.4s" },
+  { x: 980, y: 640, r: 2.2, delay: "1.7s" },
+  { x: 1150, y: 120, r: 1.6, delay: "2.3s" },
+  { x: 40, y: 220, r: 1.8, delay: "0.8s" },
+  { x: 620, y: 480, r: 1.4, delay: "3.1s" },
+];
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const reduce =
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
-
-    const cell = 64;
-    const nodes = [];
-    const cols = Math.ceil(canvas.width / cell) + 1;
-    const rows = Math.ceil(canvas.height / cell) + 1;
-    for (let x = 0; x < cols; x++) {
-      for (let y = 0; y < rows; y++) {
-        if (Math.random() > 0.86) {
-          nodes.push({
-            x: x * cell + (Math.random() - 0.5) * 14,
-            y: y * cell + (Math.random() - 0.5) * 14,
-            pulse: Math.random() * Math.PI * 2,
-          });
-        }
-      }
-    }
-
-    const drawGrid = () => {
-      ctx.strokeStyle = "rgba(199,205,218,0.05)";
-      ctx.lineWidth = 1;
-      for (let x = 0; x < canvas.width; x += cell) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-      for (let y = 0; y < canvas.height; y += cell) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
-    };
-
-    let raf;
-    let t = 0;
-    const draw = () => {
-      t += 0.012;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawGrid();
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x;
-          const dy = nodes[i].y - nodes[j].y;
-          const d = Math.hypot(dx, dy);
-          if (d < cell * 1.6) {
-            ctx.beginPath();
-            ctx.moveTo(nodes[i].x, nodes[i].y);
-            ctx.lineTo(nodes[j].x, nodes[i].y);
-            ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.strokeStyle = "rgba(0,140,255,0.10)";
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-      nodes.forEach((n) => {
-        const o = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(t * 2 + n.pulse));
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(79,195,255,${o})`;
-        ctx.fill();
-      });
-      raf = requestAnimationFrame(draw);
-    };
-
-    if (reduce) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawGrid();
-      nodes.forEach((n) => {
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(79,195,255,0.45)";
-        ctx.fill();
-      });
-    } else {
-      draw();
-    }
-
-    return () => {
-      window.removeEventListener("resize", resize);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
-
+function Y2KWallpaper() {
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        display: "block",
-      }}
-    />
+    <div className="hero-wallpaper" aria-hidden="true">
+      <svg
+        viewBox="0 0 1200 800"
+        preserveAspectRatio="xMidYMid slice"
+        style={{ width: "100%", height: "100%", display: "block" }}
+      >
+        <defs>
+          <radialGradient id="bgDepth" cx="72%" cy="18%" r="75%">
+            <stop offset="0%" stopColor="#101B33" />
+            <stop offset="55%" stopColor="#0A1020" />
+            <stop offset="100%" stopColor="#050709" />
+          </radialGradient>
+          <linearGradient id="gradWispA" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="55%" stopColor={C.accentLight} />
+            <stop offset="100%" stopColor="#8A5CF6" />
+          </linearGradient>
+          <linearGradient id="gradWispB" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#8A5CF6" />
+            <stop offset="55%" stopColor={C.accentLight} />
+            <stop offset="100%" stopColor="#FFFFFF" />
+          </linearGradient>
+          <linearGradient id="gradWispC" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={C.accent} />
+            <stop offset="100%" stopColor="#FFFFFF" />
+          </linearGradient>
+          <radialGradient id="gradSwirl" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
+            <stop offset="100%" stopColor={C.accentLight} stopOpacity="0" />
+          </radialGradient>
+          <filter id="blurLg" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="20" />
+          </filter>
+          <filter id="blurSm" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="7" />
+          </filter>
+        </defs>
+
+        <rect x="0" y="0" width="1200" height="800" fill="url(#bgDepth)" />
+
+        <circle
+          cx="920"
+          cy="140"
+          r="220"
+          fill="url(#gradSwirl)"
+          opacity="0.5"
+        />
+        <g className="swirl" style={{ transformOrigin: "920px 140px" }}>
+          <circle
+            cx="920"
+            cy="140"
+            r="60"
+            fill="none"
+            stroke={C.accentLight}
+            strokeWidth="1.4"
+            opacity="0.55"
+            strokeDasharray="3 9"
+          />
+          <circle
+            cx="920"
+            cy="140"
+            r="90"
+            fill="none"
+            stroke="#8A5CF6"
+            strokeWidth="1"
+            opacity="0.4"
+            strokeDasharray="2 13"
+          />
+          <circle
+            cx="920"
+            cy="140"
+            r="34"
+            fill="none"
+            stroke="#FFFFFF"
+            strokeWidth="1.6"
+            opacity="0.6"
+          />
+        </g>
+
+        <g className="ribbon ribbon-a">
+          <path
+            d="M -100,620 C 180,720 360,430 610,480 C 860,530 940,240 1320,140"
+            fill="none"
+            stroke="url(#gradWispA)"
+            strokeWidth="46"
+            strokeLinecap="round"
+            opacity="0.14"
+            filter="url(#blurLg)"
+          />
+          <path
+            d="M -100,620 C 180,720 360,430 610,480 C 860,530 940,240 1320,140"
+            fill="none"
+            stroke="url(#gradWispA)"
+            strokeWidth="20"
+            strokeLinecap="round"
+            opacity="0.32"
+            filter="url(#blurSm)"
+          />
+          <path
+            d="M -100,620 C 180,720 360,430 610,480 C 860,530 940,240 1320,140"
+            fill="none"
+            stroke="url(#gradWispA)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            opacity="0.85"
+          />
+        </g>
+        <g className="ribbon ribbon-b">
+          <path
+            d="M -60,120 C 240,20 400,280 660,230 C 920,180 1000,470 1320,560"
+            fill="none"
+            stroke="url(#gradWispB)"
+            strokeWidth="40"
+            strokeLinecap="round"
+            opacity="0.13"
+            filter="url(#blurLg)"
+          />
+          <path
+            d="M -60,120 C 240,20 400,280 660,230 C 920,180 1000,470 1320,560"
+            fill="none"
+            stroke="url(#gradWispB)"
+            strokeWidth="18"
+            strokeLinecap="round"
+            opacity="0.3"
+            filter="url(#blurSm)"
+          />
+          <path
+            d="M -60,120 C 240,20 400,280 660,230 C 920,180 1000,470 1320,560"
+            fill="none"
+            stroke="url(#gradWispB)"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+            opacity="0.8"
+          />
+        </g>
+        <g className="ribbon ribbon-c">
+          <path
+            d="M 60,800 C 260,600 480,650 690,440 C 900,230 1010,300 1180,30"
+            fill="none"
+            stroke="url(#gradWispC)"
+            strokeWidth="30"
+            strokeLinecap="round"
+            opacity="0.12"
+            filter="url(#blurLg)"
+          />
+          <path
+            d="M 60,800 C 260,600 480,650 690,440 C 900,230 1010,300 1180,30"
+            fill="none"
+            stroke="url(#gradWispC)"
+            strokeWidth="14"
+            strokeLinecap="round"
+            opacity="0.26"
+            filter="url(#blurSm)"
+          />
+          <path
+            d="M 60,800 C 260,600 480,650 690,440 C 900,230 1010,300 1180,30"
+            fill="none"
+            stroke="url(#gradWispC)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+        </g>
+
+        {SPARKLES.map((s, i) => (
+          <circle
+            key={i}
+            className="sparkle"
+            cx={s.x}
+            cy={s.y}
+            r={s.r}
+            fill="#FFFFFF"
+            style={{ animationDelay: s.delay }}
+          />
+        ))}
+      </svg>
+      <div className="shine-sweep" />
+    </div>
   );
 }
 
@@ -673,7 +743,6 @@ export default function Portfolio() {
   const [startOpen, setStartOpen] = useState(false);
   const [clock, setClock] = useState(() => new Date());
   const [meters, setMeters] = useState({ cpu: 34, ram: 58 });
-  const glowRef = useRef(null);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -733,16 +802,6 @@ export default function Portfolio() {
   const go = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setStartOpen(false);
-  };
-
-  const handleHeroMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    if (glowRef.current) {
-      glowRef.current.style.left = x + "px";
-      glowRef.current.style.top = y + "px";
-    }
   };
 
   const clockStr = clock.toLocaleTimeString([], {
@@ -827,14 +886,6 @@ export default function Portfolio() {
           letter-spacing: 0.05em; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
           text-transform: uppercase; flex-shrink: 0;
         }
-        .taskbar-apps { display: flex; gap: 6px; overflow-x: auto; flex: 1; min-width: 0; }
-        .taskbar-btn {
-          display: flex; align-items: center; gap: 6px; white-space: nowrap;
-          background: #12161F; border: 1px solid rgba(255,255,255,0.08); border-radius: 3px;
-          color: ${C.textSec}; padding: 7px 12px; font-family: ${T.body}; font-size: 11px; font-weight: 700;
-          cursor: pointer; text-transform: uppercase; letter-spacing: 0.03em;
-        }
-        .taskbar-btn.active { color: #fff; background: #0A2A46; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(79,195,255,0.5); }
         .tray { display: flex; align-items: center; gap: 12px; padding: 0 6px 0 14px; border-left: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
         .meter { display: flex; align-items: center; gap: 5px; }
         .meter span { font-family: ${T.mono}; font-size: 9px; color: ${C.textSec}; }
@@ -863,11 +914,25 @@ export default function Portfolio() {
           border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
-        .desktop-icons { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-        .desktop-icon { position: absolute; pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 76px; background: none; border: none; cursor: pointer; padding: 8px 4px; }
-        .desktop-icon span { font-family: ${T.body}; font-size: 10.5px; color: ${C.chrome1}; text-align: center; line-height: 1.3; text-shadow: 0 1px 3px rgba(0,0,0,0.9); word-break: break-word; }
-        .desktop-icon:hover span, .desktop-icon:focus span { color: ${C.accentLight}; }
-        @media (max-width: 760px) { .desktop-icons { display: none; } }
+        .hero-wallpaper { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+        .ribbon { animation: driftRibbon 26s ease-in-out infinite; }
+        .ribbon-b { animation-duration: 32s; animation-direction: alternate; }
+        .ribbon-c { animation-duration: 22s; animation-direction: alternate-reverse; }
+        @keyframes driftRibbon { 0%,100% { transform: translate(0,0); } 50% { transform: translate(18px,-14px); } }
+        .swirl { animation: spin 90s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .sparkle { animation: twinkle 3.2s ease-in-out infinite; }
+        @keyframes twinkle { 0%,100% { opacity: 0.15; } 50% { opacity: 0.95; } }
+        .shine-sweep { position: absolute; top: 0; bottom: 0; width: 26%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); animation: sweepShine 9s ease-in-out infinite; pointer-events: none; }
+        @keyframes sweepShine { 0% { transform: translateX(-120%) skewX(-12deg); } 100% { transform: translateX(420%) skewX(-12deg); } }
+
+        .dock-handle { position: relative; z-index: 3; display: flex; justify-content: center; align-items: center; gap: 3px; width: 60px; height: 9px; margin: 16px auto -1px; background: linear-gradient(180deg, #2E3542, #161B24); border: 1px solid rgba(255,255,255,0.12); border-bottom: none; border-radius: 5px 5px 0 0; }
+        .dock-handle span { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.35); }
+        .icon-dock { position: relative; z-index: 2; display: flex; justify-content: center; flex-wrap: wrap; gap: 4px; margin: 0 auto 0; padding: 10px 12px; max-width: 560px; background: linear-gradient(180deg, #232A36, #12161F); border: 1px solid rgba(255,255,255,0.1); border-top-color: rgba(255,255,255,0.2); border-radius: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 28px rgba(0,0,0,0.4); }
+        .icon-dock-btn { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 78px; background: none; border: none; cursor: pointer; padding: 8px 4px; border-radius: 7px; transition: transform 0.18s ease, background 0.18s ease; }
+        .icon-dock-btn:hover, .icon-dock-btn:focus-visible { transform: translateY(-5px); background: rgba(79,195,255,0.12); }
+        .icon-dock-btn span { font-family: ${T.mono}; font-size: 9.5px; color: ${C.textSec}; text-align: center; letter-spacing: 0.02em; }
+        .icon-dock-btn:hover span, .icon-dock-btn:focus-visible span { color: ${C.accentLight}; }
 
         .about-grid { display: grid; grid-template-columns: 128px 1fr; gap: 40px; align-items: start; }
         .exp-grid { display: grid; grid-template-columns: 168px 1fr; gap: 34px; }
@@ -1000,47 +1065,10 @@ export default function Portfolio() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            background: `radial-gradient(ellipse at 70% 20%, #0B1626 0%, ${C.bgDeep} 60%)`,
+            background: C.bgDeep,
           }}
-          onMouseMove={handleHeroMouseMove}
         >
-          <CircuitGrid />
-          <div
-            ref={glowRef}
-            aria-hidden
-            style={{
-              position: "absolute",
-              left: "60%",
-              top: "30%",
-              transform: "translate(-50%, -50%)",
-              width: 480,
-              height: 480,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, ${C.accentGlow} 0%, transparent 70%)`,
-              pointerEvents: "none",
-              zIndex: 0,
-              transition: "left 0.08s ease, top 0.08s ease",
-            }}
-          />
-
-          <div className="desktop-icons">
-            {DESKTOP_ICONS.map((ic) => (
-              <button
-                key={ic.id}
-                type="button"
-                className="desktop-icon"
-                style={{ top: ic.top, left: ic.left }}
-                onClick={() =>
-                  ic.href
-                    ? window.open(ic.href, "_blank", "noopener,noreferrer")
-                    : go(ic.id)
-                }
-              >
-                <PixelIcon type={ic.icon} size={30} />
-                <span>{ic.label}</span>
-              </button>
-            ))}
-          </div>
+          <Y2KWallpaper />
 
           <div
             style={{
@@ -1153,18 +1181,31 @@ export default function Portfolio() {
                 </div>
               </div>
             </Win>
-            <div
-              style={{
-                textAlign: "center",
-                marginTop: 20,
-                fontFamily: T.mono,
-                fontSize: 10.5,
-                color: C.chrome3,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-              }}
-            >
-              double-click a desktop icon to explore ↴
+
+            <div className="dock-handle" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+            <div className="icon-dock">
+              {DESKTOP_ICONS.map((ic) => (
+                <button
+                  key={ic.id}
+                  type="button"
+                  className="icon-dock-btn"
+                  onClick={() =>
+                    ic.href
+                      ? window.open(ic.href, "_blank", "noopener,noreferrer")
+                      : go(ic.id)
+                  }
+                >
+                  <PixelIcon type={ic.icon} size={24} />
+                  <span>{ic.label}</span>
+                </button>
+              ))}
             </div>
           </div>
         </section>
@@ -1576,7 +1617,6 @@ export default function Portfolio() {
               >
                 ISGI Casablanca — OFPPT
               </div>
-              
 
               <div
                 style={{
@@ -1975,18 +2015,7 @@ export default function Portfolio() {
         >
           ⊞ Start
         </button>
-        <div className="taskbar-apps scroll-row">
-          {NAV.map((n) => (
-            <button
-              key={n.id}
-              type="button"
-              className={"taskbar-btn" + (active === n.id ? " active" : "")}
-              onClick={() => go(n.id)}
-            >
-              <PixelIcon type={n.icon} size={12} /> {n.label}
-            </button>
-          ))}
-        </div>
+        <div style={{ flex: 1 }} />
         <div className="tray">
           <div className="meter" title="CPU load">
             <span>CPU</span>
