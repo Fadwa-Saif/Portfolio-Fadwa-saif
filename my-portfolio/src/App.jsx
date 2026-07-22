@@ -52,18 +52,11 @@ const PROJECTS = [
     name: "MediCabinet",
     desc: "A multi-doctor, multi-cabinet SaaS for medical practices — patient records, appointments, SOAP consultations, lab analyses, and an AI assistant powered by Groq (LLaMA-3). Built with a teammate and supervised at ISGI.",
     tech: ["React", "Laravel", "MySQL", "JWT", "Groq AI", "Tailwind"],
-    github: "https://github.com/Fadwa-Saif",
+    gitLab:
+      "https://gitlab.com/Fadwa-Saif/MediCabinet-Projet-de-synthese-FrontEnd",
     featured: true,
   },
-  {
-    id: "p2",
-    tag: "Enterprise · Internship",
-    name: "JOJMA ERP",
-    desc: "Modular ERP for a Moroccan metallic construction company. Full sales cycle (quote → delivery → invoice), manufacturing BOMs, stock, purchases, and RBAC for 4 roles — built in a 4-person team during internship.",
-    tech: ["React.js", "Spring Boot 3", "Java 17", "MySQL", "JWT"],
-    github: "https://github.com/Fadwa-Saif",
-    featured: false,
-  },
+  
   {
     id: "p3",
     tag: "Frontend · Vanilla JS",
@@ -1482,14 +1475,20 @@ export default function Portfolio() {
                       </div>
                     </div>
                     <div className="win-status">
-                      <span>▶ github.com/Fadwa-Saif</span>
+                      <span>
+                        {" "}
+                        ▶{" "}
+                        {p.gitLab
+                          ? "gitlab.com/Fadwa-Saif"
+                          : "github.com/Fadwa-Saif"}
+                      </span>
                       <a
-                        href={p.github}
+                        href={p.gitLab || p.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ color: C.accentLight, fontWeight: 700 }}
                       >
-                        OPEN ↗
+                        OPEN ↗ 
                       </a>
                     </div>
                   </div>
@@ -1878,7 +1877,7 @@ export default function Portfolio() {
                     flexWrap: "wrap",
                   }}
                 >
-                  <a href="mailto:your@email.com" className="btn-primary">
+                  <a href="mailto:saiffadoua@email.com" className="btn-primary">
                     Send Email
                   </a>
                   <a
