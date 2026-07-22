@@ -878,6 +878,10 @@ export default function Portfolio() {
           border-top: 1px solid rgba(255,255,255,0.1);
           box-shadow: 0 -6px 20px rgba(0,0,0,0.5);
         }
+        .dock-icon { display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; cursor: pointer; padding: 2px 8px; border-radius: 4px; transition: transform 0.18s ease, background 0.18s ease; }
+        .dock-icon:hover, .dock-icon:focus-visible { transform: translateY(-4px) scale(1.1); background: rgba(79,195,255,0.12); }
+        .dock-icon span { font-family: 'Space Mono', monospace; font-size: 9px; color: #8B94A6; text-align: center; letter-spacing: 0.02em; max-width: 56px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dock-icon:hover span, .dock-icon:focus-visible span { color: #4FC3FF; }
         .start-btn {
           display: flex; align-items: center; gap: 6px;
           background: linear-gradient(180deg, #1E8AE8, #00417A);
@@ -1046,11 +1050,6 @@ export default function Portfolio() {
             <div style={{ width: 24, height: 24 }}>
               <ChipBadge size={48} />
             </div>
-            <span
-              style={{ fontFamily: T.pixel, fontSize: 18, color: C.chrome1 }}
-            >
-              {clockStr}
-            </span>
           </div>
         </div>
 
@@ -1181,36 +1180,8 @@ export default function Portfolio() {
                 </div>
               </div>
             </Win>
-
-            <div className="dock-handle" aria-hidden="true">
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
-            <div className="icon-dock">
-              {DESKTOP_ICONS.map((ic) => (
-                <button
-                  key={ic.id}
-                  type="button"
-                  className="icon-dock-btn"
-                  onClick={() =>
-                    ic.href
-                      ? window.open(ic.href, "_blank", "noopener,noreferrer")
-                      : go(ic.id)
-                  }
-                >
-                  <PixelIcon type={ic.icon} size={24} />
-                  <span>{ic.label}</span>
-                </button>
-              ))}
-            </div>
           </div>
         </section>
-
-        <Marquee />
 
         {/* ── ABOUT ── */}
         <section
@@ -2015,7 +1986,31 @@ export default function Portfolio() {
         >
           ⊞ Start
         </button>
-        <div style={{ flex: 1 }} />
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 2,
+          }}
+        >
+          {DESKTOP_ICONS.map((ic) => (
+            <button
+              key={ic.id}
+              type="button"
+              className="dock-icon"
+              onClick={() =>
+                ic.href
+                  ? window.open(ic.href, "_blank", "noopener,noreferrer")
+                  : go(ic.id)
+              }
+            >
+              <PixelIcon type={ic.icon} size={22} />
+              <span>{ic.label}</span>
+            </button>
+          ))}
+        </div>{" "}
         <div className="tray">
           <div className="meter" title="CPU load">
             <span>CPU</span>
