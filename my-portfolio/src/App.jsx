@@ -65,8 +65,8 @@ const EXPERIENCE = [
     role: "Full-Stack Developer Intern",
     range: "Jan 2026 — Feb 2026 · Casablanca, Morocco",
     bullets: [
+      "Participated in the development of an internal ERP for managing business processes",
       "Developed backend modules with Spring Boot and Java, and frontend modules with React.js, within an Agile team",
-      "Contributed to the design of an internal ERP for managing business processes",
       "Ran tests, fixed bugs, optimized performance, and managed versioning with Git",
     ],
     tech: [
@@ -486,14 +486,13 @@ export default function Portfolio() {
         <main>
           {/* hero */}
           <section className="hero" id="hero">
-            <p className="kicker">Hi, my name is</p>
+            <p className="kicker">Hi, I'm</p>
             <h1>Fadwa Saif.</h1>
             <h2>I build things for the web.</h2>
             <p>
-              I'm a full-stack developer based in Casablanca, Morocco, finishing
-              my Full Stack Web Development diploma at ISGI. I build products
-              end to end — React on the front, Laravel and Spring Boot
-              underneath.
+              I'm a full-stack developer based in Casablanca, Morocco, I build
+              products end to end . <br></br>
+              building stuff • breaking things • fixing them better
             </p>
             <div className="hero-socials">
               {SOCIALS.map((s) => (
@@ -515,14 +514,21 @@ export default function Portfolio() {
             <SectionHeading num="01">About</SectionHeading>
             <div className="about-main">
               <p>
-                I'm finishing my TS Développement Digital Web Full Stack diploma
-                at ISGI Casablanca (OFPPT), and most of what I've learned since
-                has come from building things I actually wanted to ship.
+                Hi! I'm Fadwa, I design and build web applications from the
+                ground up,I'am a Full-stack Developer, turning ideas into
+                products people actually use.
               </p>
               <p>
-                I've pitched a SaaS product to a professional jury and interned
-                on a live ERP build, and I still think the best part of the job
-                is watching something you built actually get used.
+                My experience includes building an internal ERP system during a
+                Spring Boot/React internship at JOJMA Group — my first time
+                working with Spring Boot — and MediCabinet, a multi-cabinet
+                medical SaaS platform I developed and presented to a
+                professional jury.
+              </p>
+              <p>
+                Currently seeking my first full-time opportunity as a full-stack
+                developer. In the meantime, I'm working on side projects and
+                continuing to sharpen my skills.
               </p>
               <div className="tech-grid">
                 {SKILLS.map((g) => (
