@@ -19,10 +19,9 @@ const SANS = "'Inter', -apple-system, 'Segoe UI', sans-serif";
 const NAV = [
   { num: "01", label: "About", id: "about" },
   { num: "02", label: "Experience", id: "experience" },
-  { num: "03", label: "Work", id: "work" },
+  { num: "03", label: "Projects", id: "projects" },
   { num: "04", label: "Education", id: "education" },
   { num: "05", label: "Certifications", id: "certifications" },
-  { num: "06", label: "Contact", id: "contact" },
 ];
 
 const SOCIALS = [
@@ -32,9 +31,10 @@ const SOCIALS = [
     href: "https://www.linkedin.com/in/fadwa-saif-a7280922b/",
     icon: "linkedin",
   },
-  { label: "Email", href: "mailto:saiffadoua@email.com", icon: "mail" },
+  { label: "Email", href: "mailto:saiffadoua@gmail.com", icon: "mail" },
 ];
 
+// NOTE: About section content (paragraphs + skills grid) is intentionally left untouched.
 const SKILLS = [
   {
     cat: "Frontend",
@@ -61,14 +61,20 @@ const SKILLS = [
 
 const EXPERIENCE = [
   {
-    company: "Jojma",
+    company: "JOJMA Group",
     role: "Full-Stack Developer Intern",
-    range: "Mar 2026 — Apr 2026 · Casablanca, Morocco",
+    range: "Jan 2026 — Feb 2026 · Casablanca, Morocco",
     bullets: [
-      "Built a modular ERP system from scratch with a 4-person team, shipped in 5-6 weeks",
-      "Covered the full sales cycle — quotes, orders, delivery, invoicing — plus manufacturing BOMs, stock and purchasing",
-      "Picked up Spring Boot 3 and Java 17 under real production conditions, with no prior experience",
-      "Implemented role-based access control on the React front end for four roles: Admin, Commercial, Magasinier, Comptable",
+      "Developed backend modules with Spring Boot and Java, and frontend modules with React.js, within an Agile team",
+      "Contributed to the design of an internal ERP for managing business processes",
+      "Ran tests, fixed bugs, optimized performance, and managed versioning with Git",
+    ],
+    tech: [
+      "Java (Spring Boot)",
+      "JavaScript (React)",
+      "HTML",
+      "Tailwind CSS",
+      "MySQL",
     ],
   },
 ];
@@ -76,64 +82,70 @@ const EXPERIENCE = [
 const PROJECTS = [
   {
     name: "MediCabinet",
-    tag: "SaaS · Full Stack",
-    desc: "A multi-doctor, multi-cabinet SaaS for medical practices — patient records, appointments, SOAP consultations, lab analyses, and an AI assistant powered by Groq (LLaMA-3). Built with a teammate and supervised at ISGI.",
-    tech: ["React", "Laravel", "MySQL", "JWT", "Groq AI", "Tailwind"],
+    tag: "Academic Project",
+    desc: "A multi-practice, multi-doctor SaaS platform with medical records, appointment scheduling, and an AI chatbot — deployed to production and presented to a professional jury (PIE).",
+    tech: ["React.js", "Laravel", "MySQL", "JWT", "Groq API (LLaMA 3.3)"],
     link: "https://gitlab.com/Fadwa-Saif/MediCabinet-Projet-de-synthese-FrontEnd",
   },
   {
-    name: "Maison Medina",
-    tag: "Frontend · Vanilla JS",
-    desc: "A restaurant management site with a landing page, menu, reservations, recipes and an admin dashboard with authentication — built in vanilla HTML, CSS and JavaScript.",
-    tech: ["HTML", "CSS", "JavaScript", "Admin Dashboard"],
-    link: "https://github.com/Fadwa-Saif/Maison-Medina",
+    name: "E-Stagiaire",
+    tag: "Academic Project",
+    desc: "An intern management system with full handling of profiles, grades and groups, with separate interfaces for interns and trainers.",
+    tech: ["PHP", "JavaScript", "HTML", "CSS", "MySQL"],
+    link: null,
   },
 ];
 
-const EDU_TOPICS = [
-  "React / Redux",
-  "Laravel",
-  "Spring Boot",
-  "MySQL",
-  "MongoDB",
-  "Docker",
-  "Machine Learning",
-  "Agile / Scrum",
-  "UML & Merise",
+const EDUCATION = [
+  {
+    title: "Specialized Technician in Digital Development",
+    org: "ISGI Casablanca (OFPPT)",
+    date: "2024 – 2026",
+  },
+  {
+    title: "Entrepreneurial Innovation Program (PIE)",
+    org: "ISGI Casablanca / UM6P",
+    date: "2024 – 2026",
+  },
+  {
+    title: "Baccalaureate in Physical Sciences",
+    org: "Lycée Qualifiant Ibn Zoher",
+    date: "2022",
+  },
 ];
 
 const CERTS = [
   {
+    name: "Machine Learning Essentials",
+    issuer: "Qualifying Training",
+    desc: "Fundamentals of Machine Learning: data preprocessing, classification algorithms, and model evaluation.",
+    link: null,
+    status: "issued",
+    date: "2026",
+  },
+  {
     name: "Python Essentials 1",
-    issuer: "Cisco · OpenEDG Python Institute",
-    desc: "Python programming fundamentals — syntax, semantics, and the Python Standard Library.",
+    issuer: "Cisco",
+    desc: "Python fundamentals: data structures, algorithms, and object-oriented programming.",
     link: "https://www.credly.com/badges/d97adb7d-2547-48a6-b1a2-8d8e271539f3",
     status: "issued",
-    date: "2024",
+    date: "2025",
   },
   {
     name: "SheCodes Plus",
     issuer: "SheCodes",
-    desc: "Hands-on coding workshop covering front-end development and applied AI.",
+    desc: "Advanced web development training: HTML5, CSS3, JavaScript, API integration, Git, and GitHub.",
     link: "https://www.shecodes.io/certificates/704fd72ea1d7c16d7610f1ab0c56a55e",
     status: "issued",
     date: "2025",
   },
   {
-    name: "Machine Learning",
-    issuer: "TBD",
-    desc: "Fundamentals of ML — neural networks, transfer learning, model evaluation.",
+    name: "SheCodes Basics",
+    issuer: "SheCodes",
+    desc: "Front-end web development: HTML5, CSS3, JavaScript, and responsive design.",
     link: null,
-    status: "pending",
-    date: "Aug 2026",
-  },
-  {
-    name: "Entrepreneurship",
-    issuer: "OFPPT × UM6P",
-    desc: "Entrepreneurship program co-organized by OFPPT and Mohammed VI Polytechnic University.",
-    link: null,
-    status: "pending",
-    date: "Aug 2026",
+    status: "issued",
+    date: "2024",
   },
 ];
 
@@ -343,8 +355,6 @@ export default function Portfolio() {
         .hero-socials{ display:none; align-items:center; gap:24px; margin-top:32px; }
         .hero-socials a{ color:${C.slate}; transition:color .25s ease, transform .25s ease; }
         .hero-socials a:hover{ color:${C.accent}; transform:translateY(-3px); }
-        .btn{ display:inline-flex; align-items:center; gap:8px; padding:16px 28px; border:1px solid ${C.accent}; color:${C.accent}; font-family:${MONO}; font-size:14px; border-radius:4px; transition:background .25s ease, transform .2s ease; width:fit-content; background:none; }
-        .btn:hover{ background:rgba(${AR},0.15); transform:translateY(-2px); }
 
         section{ padding:100px 0; }
         .reveal{ opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s ease; }
@@ -387,11 +397,11 @@ export default function Portfolio() {
         .proj-tech{ display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:20px; }
         .proj-tech span{ font-family:${MONO}; font-size:12px; color:${C.ltSlate}; }
 
-        .edu-card{ background:${C.lightNavy}; border-radius:6px; padding:32px; max-width:680px; }
-        .edu-card h3{ font-family:${SANS}; color:${C.white}; font-size:19px; font-weight:600; }
-        .edu-card .org{ font-family:${MONO}; font-size:13px; color:${C.accent}; margin:6px 0 20px; }
-        .edu-tags{ display:flex; flex-wrap:wrap; gap:8px; }
-        .edu-tags span{ font-family:${MONO}; font-size:12px; color:${C.ltSlate}; border:1px solid ${C.lightestNavy}; border-radius:4px; padding:4px 10px; }
+        .edu-row{ display:flex; justify-content:space-between; align-items:baseline; gap:20px; padding:18px 0; border-bottom:1px solid ${C.lightestNavy}; flex-wrap:wrap; }
+        .edu-row:last-child{ border-bottom:none; }
+        .edu-row h3{ font-family:${SANS}; color:${C.white}; font-size:16px; font-weight:600; }
+        .edu-row .org{ font-family:${MONO}; font-size:12px; color:${C.accent}; margin-top:4px; }
+        .edu-row .date{ font-family:${MONO}; font-size:12px; color:${C.slate}; white-space:nowrap; }
 
         .cert-row{ display:flex; justify-content:space-between; gap:20px; padding:22px 0; border-bottom:1px solid ${C.lightestNavy}; flex-wrap:wrap; }
         .cert-row:last-child{ border-bottom:none; }
@@ -405,10 +415,7 @@ export default function Portfolio() {
         .dot.on{ background:${C.accent}; box-shadow:0 0 6px ${C.accent}; }
         .dot.off{ border:1.5px solid ${C.slate}; }
 
-        .contact{ text-align:center; max-width:600px; margin:0 auto; }
-        .contact p{ margin-top:18px; }
-        .contact .btn{ margin:36px auto 0; }
-        footer{ position:relative; z-index:1; text-align:center; padding:40px 0 100px; font-family:${MONO}; font-size:12px; color:${C.slate}; }
+        footer{ position:relative; z-index:1; text-align:center; padding:60px 0 100px; font-family:${MONO}; font-size:12px; color:${C.slate}; }
 
         @media (max-width:1080px){
           .rail-left, .rail-right{ display:none; }
@@ -471,8 +478,8 @@ export default function Portfolio() {
 
         {/* right rail */}
         <aside className="rail-right">
-          <a className="rail-email" href="mailto:saiffadoua@email.com">
-            saiffadoua@email.com
+          <a className="rail-email" href="mailto:saiffadoua@gmail.com">
+            saiffadoua@gmail.com
           </a>
         </aside>
 
@@ -503,7 +510,7 @@ export default function Portfolio() {
             </div>
           </section>
 
-          {/* about */}
+          {/* about — left as-is */}
           <Reveal as="section" id="about">
             <SectionHeading num="01">About</SectionHeading>
             <div className="about-main">
@@ -538,22 +545,24 @@ export default function Portfolio() {
             <ExperienceTabs />
           </Reveal>
 
-          {/* work */}
-          <Reveal as="section" id="work">
-            <SectionHeading num="03">Work</SectionHeading>
+          {/* projects */}
+          <Reveal as="section" id="projects">
+            <SectionHeading num="03">Projects</SectionHeading>
             <div className="proj-grid">
               {PROJECTS.map((p) => (
                 <div className="proj-card" key={p.name}>
                   <div className="proj-top">
                     <Icon name="folder" size={30} />
-                    <a
-                      href={p.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Open ${p.name}`}
-                    >
-                      <Icon name="external" size={20} />
-                    </a>
+                    {p.link && (
+                      <a
+                        href={p.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open ${p.name}`}
+                      >
+                        <Icon name="external" size={20} />
+                      </a>
+                    )}
                   </div>
                   <span className="proj-tag">{p.tag}</span>
                   <h3>{p.name}</h3>
@@ -571,16 +580,16 @@ export default function Portfolio() {
           {/* education */}
           <Reveal as="section" id="education">
             <SectionHeading num="04">Education</SectionHeading>
-            <div className="edu-card">
-              <h3>TS Développement Digital Web Full Stack</h3>
-              <p className="org">
-                ISGI Casablanca · OFPPT — 9 modules completed
-              </p>
-              <div className="edu-tags">
-                {EDU_TOPICS.map((t) => (
-                  <span key={t}>{t}</span>
-                ))}
-              </div>
+            <div className="edu-list">
+              {EDUCATION.map((e) => (
+                <div className="edu-row" key={e.title}>
+                  <div>
+                    <h3>{e.title}</h3>
+                    <p className="org">{e.org}</p>
+                  </div>
+                  <span className="date">{e.date}</span>
+                </div>
+              ))}
             </div>
           </Reveal>
 
@@ -607,30 +616,6 @@ export default function Portfolio() {
                 </div>
               </div>
             ))}
-          </Reveal>
-
-          {/* contact */}
-          <Reveal as="section" id="contact">
-            <div className="contact">
-              <p className="kicker">06. What's Next?</p>
-              <h2
-                style={{
-                  fontFamily: SANS,
-                  color: C.white,
-                  fontWeight: 700,
-                  fontSize: "clamp(28px,5vw,44px)",
-                }}
-              >
-                Get In Touch
-              </h2>
-              <p>
-                I'm open to full-time roles, collaborations and interesting
-                problems. The fastest way to reach me is email.
-              </p>
-              <a className="btn" href="mailto:saiffadoua@email.com">
-                Say hello
-              </a>
-            </div>
           </Reveal>
 
           <footer>Built by Fadwa Saif · 2026</footer>
@@ -666,6 +651,11 @@ function ExperienceTabs() {
             <li key={b}>{b}</li>
           ))}
         </ul>
+        <div className="proj-tech">
+          {job.tech.map((t) => (
+            <span key={t}>{t}</span>
+          ))}
+        </div>
       </div>
     </div>
   );
