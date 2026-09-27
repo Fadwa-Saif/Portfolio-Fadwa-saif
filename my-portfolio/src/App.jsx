@@ -1,78 +1,93 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-// ─── THEME — "SAIF-OS" (dark 2000s desktop / tech-ad chrome) ────────────────
+// ─── PALETTE — https://coolors.co/palette/0a1128-001f54-034078 ─────────────
 const C = {
-  bgDeep: "#050709",
-  bgPanel: "#0A0E16",
-  panelSteel: "#12161F",
-  chrome1: "#F4F6FA",
-  chrome2: "#C7CDDA",
-  chrome3: "#565D6C",
-  hairline: "rgba(199,205,218,0.14)",
-  text: "#E9EEF6",
-  textSec: "#8B94A6",
-  accent: "#0072CE",
-  accentLight: "#4FC3FF",
-  accentGlow: "rgba(0,140,255,0.30)",
-  led: "#3CFF7A",
-  ledAmber: "#FFB020",
+  navy: "#0A1128",
+  lightNavy: "#001F54",
+  accent: "#034078",
+  lightestNavy: "rgba(3,64,120,0.35)",
+  slate: "#8493B4",
+  ltSlate: "#C3D0E8",
+  white: "#EAF0FB",
 };
+const AR = "3,64,120"; // accent as r,g,b, for rgba()
 
-const T = {
-  display: "'Orbitron', 'Eurostile', sans-serif",
-  body: "Verdana, Geneva, Tahoma, sans-serif",
-  mono: "'Space Mono', 'Consolas', monospace",
-  pixel: "'VT323', monospace",
-};
+const MONO = "'Fira Code', 'SF Mono', 'JetBrains Mono', monospace";
+const SANS = "'Inter', -apple-system, 'Segoe UI', sans-serif";
 
-function clamp(v, min, max) {
-  return Math.max(min, Math.min(max, v));
-}
+// ─── CONTENT ─────────────────────────────────────────────────────────────────
+const NAV = [
+  { num: "01", label: "About", id: "about" },
+  { num: "02", label: "Experience", id: "experience" },
+  { num: "03", label: "Work", id: "work" },
+  { num: "04", label: "Education", id: "education" },
+  { num: "05", label: "Certifications", id: "certifications" },
+  { num: "06", label: "Contact", id: "contact" },
+];
 
-// ─── DATA ─────────────────────────────────────────────────────────────────────
-const SKILLS = {
-  Frontend: [
-    "React.js",
-    "Redux",
-    "JavaScript ES6+",
-    "HTML & CSS",
-    "Tailwind CSS",
-  ],
-  Backend: ["Laravel", "Spring Boot 3", "Java 17", "PHP"],
-  Database: ["MySQL", "MongoDB"],
-  "Tools & DevOps": ["Git", "Docker", "JWT", "REST APIs", "Postman"],
-  "AI / ML": ["Python", "TensorFlow", "Groq API", "Transfer Learning"],
-  Methods: ["Agile / Scrum", "UML", "Merise", "Cloud Native"],
-};
-
-const PROJECTS = [
+const SOCIALS = [
+  { label: "GitHub", href: "https://github.com/Fadwa-Saif", icon: "github" },
   {
-    id: "p1",
-    tag: "SaaS · Full Stack",
-    name: "MediCabinet",
-    desc: "A multi-doctor, multi-cabinet SaaS for medical practices — patient records, appointments, SOAP consultations, lab analyses, and an AI assistant powered by Groq (LLaMA-3). Built with a teammate and supervised at ISGI.",
-    tech: ["React", "Laravel", "MySQL", "JWT", "Groq AI", "Tailwind"],
-    gitLab:
-      "https://gitlab.com/Fadwa-Saif/MediCabinet-Projet-de-synthese-FrontEnd",
-    featured: true,
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/fadwa-saif-a7280922b/",
+    icon: "linkedin",
   },
-  
+  { label: "Email", href: "mailto:saiffadoua@email.com", icon: "mail" },
+];
+
+const SKILLS = [
   {
-    id: "p3",
-    tag: "Frontend · Vanilla JS",
-    name: "Maison Medina",
-    desc: "A restaurant management website with multi-page architecture: landing page, menu, reservations, recipes, admin dashboard, and authentication. Built with vanilla HTML, CSS, and JavaScript.",
-    tech: ["HTML", "CSS", "JavaScript", "Admin Dashboard"],
-    github: "https://github.com/Fadwa-Saif/Maison-Medina",
-    featured: false,
+    cat: "Frontend",
+    items: [
+      "React.js",
+      "Redux",
+      "JavaScript ES6+",
+      "HTML & CSS",
+      "Tailwind CSS",
+    ],
+  },
+  { cat: "Backend", items: ["Laravel", "Spring Boot 3", "Java 17", "PHP"] },
+  { cat: "Database", items: ["MySQL", "MongoDB"] },
+  {
+    cat: "Tools & DevOps",
+    items: ["Git", "Docker", "JWT", "REST APIs", "Postman"],
+  },
+  {
+    cat: "AI / ML",
+    items: ["Python", "TensorFlow", "Groq API", "Transfer Learning"],
+  },
+  { cat: "Methods", items: ["Agile / Scrum", "UML", "Merise", "Cloud Native"] },
+];
+
+const EXPERIENCE = [
+  {
+    company: "Jojma",
+    role: "Full-Stack Developer Intern",
+    range: "Mar 2026 — Apr 2026 · Casablanca, Morocco",
+    bullets: [
+      "Built a modular ERP system from scratch with a 4-person team, shipped in 5-6 weeks",
+      "Covered the full sales cycle — quotes, orders, delivery, invoicing — plus manufacturing BOMs, stock and purchasing",
+      "Picked up Spring Boot 3 and Java 17 under real production conditions, with no prior experience",
+      "Implemented role-based access control on the React front end for four roles: Admin, Commercial, Magasinier, Comptable",
+    ],
   },
 ];
 
-const EXP_BULLETS = [
-  "Built a modular ERP system with a 4-person team from scratch, shipping in 5-6 weeks",
-  "Covered full sales cycle (quote to order to delivery to invoice), manufacturing BOMs, stock, and purchases",
-  "Learned Spring Boot 3 & Java 17 under real production conditions, no prior experience",
-  "Implemented RBAC on the React frontend for 4 distinct roles: Admin, Commercial, Magasinier, Comptable",
+const PROJECTS = [
+  {
+    name: "MediCabinet",
+    tag: "SaaS · Full Stack",
+    desc: "A multi-doctor, multi-cabinet SaaS for medical practices — patient records, appointments, SOAP consultations, lab analyses, and an AI assistant powered by Groq (LLaMA-3). Built with a teammate and supervised at ISGI.",
+    tech: ["React", "Laravel", "MySQL", "JWT", "Groq AI", "Tailwind"],
+    link: "https://gitlab.com/Fadwa-Saif/MediCabinet-Projet-de-synthese-FrontEnd",
+  },
+  {
+    name: "Maison Medina",
+    tag: "Frontend · Vanilla JS",
+    desc: "A restaurant management site with a landing page, menu, reservations, recipes and an admin dashboard with authentication — built in vanilla HTML, CSS and JavaScript.",
+    tech: ["HTML", "CSS", "JavaScript", "Admin Dashboard"],
+    link: "https://github.com/Fadwa-Saif/Maison-Medina",
+  },
 ];
 
 const EDU_TOPICS = [
@@ -91,10 +106,10 @@ const CERTS = [
   {
     name: "Python Essentials 1",
     issuer: "Cisco · OpenEDG Python Institute",
-    desc: "Python programming fundamentals - syntax, semantics, and the Python Standard Library.",
+    desc: "Python programming fundamentals — syntax, semantics, and the Python Standard Library.",
     link: "https://www.credly.com/badges/d97adb7d-2547-48a6-b1a2-8d8e271539f3",
     status: "issued",
-    year: "2024",
+    date: "2024",
   },
   {
     name: "SheCodes Plus",
@@ -102,1933 +117,556 @@ const CERTS = [
     desc: "Hands-on coding workshop covering front-end development and applied AI.",
     link: "https://www.shecodes.io/certificates/704fd72ea1d7c16d7610f1ab0c56a55e",
     status: "issued",
-    year: "2025",
+    date: "2025",
   },
   {
     name: "Machine Learning",
     issuer: "TBD",
-    desc: "Fundamentals of ML - neural networks, transfer learning, model evaluation.",
+    desc: "Fundamentals of ML — neural networks, transfer learning, model evaluation.",
     link: null,
-    status: "incoming",
-    year: "Aug 2026",
+    status: "pending",
+    date: "Aug 2026",
   },
   {
     name: "Entrepreneurship",
     issuer: "OFPPT × UM6P",
     desc: "Entrepreneurship program co-organized by OFPPT and Mohammed VI Polytechnic University.",
     link: null,
-    status: "incoming",
-    year: "Aug 2026",
+    status: "pending",
+    date: "Aug 2026",
   },
 ];
 
-const NAV = [
-  { label: "About", id: "about", icon: "doc" },
-  { label: "Skills", id: "skills", icon: "gear" },
-  { label: "Projects", id: "projects", icon: "folder" },
-  { label: "Experience", id: "experience", icon: "terminal" },
-  { label: "Education", id: "education", icon: "disk" },
-  { label: "Certifications", id: "certifications", icon: "doc" },
-  { label: "Contact", id: "contact", icon: "mail" },
-];
-const NAV_ALL = [{ label: "Desktop", id: "desktop", icon: "disk" }, ...NAV];
-
-const DESKTOP_ICONS = [
-  { id: "about", label: "About_Me.txt", icon: "doc" },
-  { id: "skills", label: "Skills.sys", icon: "gear" },
-  { id: "projects", label: "Projects", icon: "folder" },
-  { id: "contact", label: "Contact.exe", icon: "mail" },
-  {
-    id: "gh",
-    label: "GitHub.lnk",
-    icon: "link",
-    href: "https://github.com/Fadwa-Saif",
-  },
-  {
-    id: "li",
-    label: "LinkedIn.lnk",
-    icon: "link",
-    href: "https://www.linkedin.com/in/fadwa-saif-a7280922b/",
-  },
-];
-
-const BOOT_LINES = [
-  "SAIF-OS v3.1  (build 2026.07.16)",
-  "(c) 2004-2026 Fadwa Saif Systems — All rights reserved",
-  "",
-  "CPU .................................. OK",
-  "MEMORY ............................... 640K CONVENTIONAL",
-  "MOUNTING /skills ..................... OK",
-  "MOUNTING /projects ................... OK",
-  "LOADING personality.dll .............. OK",
-  "STARTING window manager .............. OK",
-  "",
-  "Press any key to continue_",
-];
-
-// ─── PIXEL ICONS ──────────────────────────────────────────────────────────────
+// ─── ICONS ────────────────────────────────────────────────────────────────────
 const ICONS = {
-  folder: (a) => (
-    <>
-      <rect x="1" y="3" width="6" height="2" fill={a.c1} />
-      <rect x="1" y="5" width="14" height="9" fill={a.c1} />
-      <rect x="1" y="5" width="14" height="1.4" fill={a.c2} opacity="0.6" />
-      <rect
-        x="1"
-        y="12.6"
-        width="14"
-        height="1.4"
-        fill={a.dark}
-        opacity="0.5"
-      />
-    </>
+  github: (
+    <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.02 1.75 2.68 1.24 3.34.95.1-.74.4-1.24.72-1.53-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.06.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .3.2.66.79.55A11.52 11.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
   ),
-  doc: (a) => (
-    <>
-      <rect x="3" y="1" width="10" height="14" fill={a.c1} />
-      <polygon points="9,1 13,5 9,5" fill={a.dark} />
-      <rect x="5" y="7" width="6" height="1" fill={a.dark} opacity="0.55" />
-      <rect x="5" y="9.5" width="6" height="1" fill={a.dark} opacity="0.55" />
-      <rect x="5" y="12" width="4" height="1" fill={a.dark} opacity="0.55" />
-    </>
+  linkedin: (
+    <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6.5 0h3.8v1.64h.05c.53-.97 1.83-2 3.76-2 4.02 0 4.76 2.5 4.76 5.76V21h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.44-2.16 2.96V21h-4V9Z" />
   ),
-  gear: (a) => (
-    <>
-      <circle cx="8" cy="8" r="3.2" fill="none" stroke={a.c1} strokeWidth="2" />
-      {[0, 45, 90, 135, 180, 225, 270, 315].map((d) => (
-        <rect
-          key={d}
-          x="7.3"
-          y="0.6"
-          width="1.4"
-          height="2.6"
-          fill={a.c1}
-          transform={`rotate(${d} 8 8)`}
-        />
-      ))}
-      <circle cx="8" cy="8" r="1.3" fill={a.accent} />
-    </>
-  ),
-  mail: (a) => (
-    <>
-      <rect x="1" y="3" width="14" height="10" fill={a.c1} />
-      <polyline
-        points="1,3 8,9 15,3"
-        fill="none"
-        stroke={a.dark}
-        strokeWidth="1.2"
-      />
-    </>
-  ),
-  terminal: (a) => (
+  mail: (
     <>
       <rect
-        x="1"
-        y="2"
-        width="14"
-        height="12"
-        fill={a.dark}
-        stroke={a.c1}
-        strokeWidth="0.6"
-      />
-      <polyline
-        points="3,6 6,8 3,10"
+        x="3"
+        y="5"
+        width="18"
+        height="14"
+        rx="2"
         fill="none"
-        stroke={a.accent}
-        strokeWidth="1.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
       />
-      <rect x="7" y="10" width="5" height="1.2" fill={a.accent} />
+      <path
+        d="m3 7 9 6 9-6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
     </>
   ),
-  disk: (a) => (
-    <>
-      <rect x="1.5" y="1.5" width="13" height="13" fill={a.c1} />
-      <rect x="3.5" y="1.5" width="7" height="5" fill={a.dark} />
-      <rect x="3" y="9" width="10" height="4.5" fill={a.c2} />
-    </>
+  folder: (
+    <path
+      d="M3 6a1 1 0 0 1 1-1h4.5l1.5 2H20a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6Z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+    />
   ),
-  link: (a) => (
+  external: (
     <>
-      <rect
-        x="2"
-        y="2"
-        width="12"
-        height="12"
+      <path d="M14 4h6v6" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path
+        d="M20 4 10 14"
         fill="none"
-        stroke={a.c1}
-        strokeWidth="1"
+        stroke="currentColor"
+        strokeWidth="1.8"
       />
-      <polyline
-        points="6,10 10,6"
-        stroke={a.accent}
-        strokeWidth="1.4"
+      <path
+        d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"
         fill="none"
-      />
-      <polyline
-        points="7,6 10,6 10,9"
-        fill="none"
-        stroke={a.accent}
-        strokeWidth="1.4"
+        stroke="currentColor"
+        strokeWidth="1.8"
       />
     </>
   ),
 };
 
-function PixelIcon({ type, size = 16 }) {
-  const a = {
-    c1: C.chrome1,
-    c2: C.chrome2,
-    dark: C.chrome3,
-    accent: C.accentLight,
-  };
-  const draw = ICONS[type] || ICONS.doc;
+function Icon({ name, size = 18 }) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 16 16"
-      shapeRendering="crispEdges"
-      style={{ flexShrink: 0 }}
+      viewBox="0 0 24 24"
+      fill="currentColor"
       aria-hidden="true"
     >
-      {draw(a)}
+      {ICONS[name]}
     </svg>
   );
 }
 
-// ─── CHIP BADGE (kept — chip/orbit signature mark) ───────────────────────────
-function ChipBadge({ size = 60 }) {
-  const cx = size / 2,
-    cy = size / 2;
-  return (
-    <svg
-      viewBox={`0 0 ${size} ${size}`}
-      style={{ width: "100%", height: "100%", display: "block" }}
-      aria-hidden="true"
-    >
-      <defs>
-        <radialGradient id="chipMetal" cx="35%" cy="30%" r="75%">
-          <stop offset="0%" stopColor="#EDF1F7" />
-          <stop offset="35%" stopColor="#B7BFCC" />
-          <stop offset="70%" stopColor="#5B6270" />
-          <stop offset="100%" stopColor="#20242D" />
-        </radialGradient>
-        <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor={C.accentLight} />
-          <stop offset="100%" stopColor={C.accent} />
-        </radialGradient>
-      </defs>
-      <circle cx={cx} cy={cy} r={size * 0.46} fill="url(#chipMetal)" />
-      <circle
-        cx={cx}
-        cy={cy}
-        r={size * 0.46}
-        fill="none"
-        stroke="rgba(0,0,0,0.4)"
-        strokeWidth={1.5}
-      />
-      {[0.38, 0.3].map((r, i) => (
-        <ellipse
-          key={i}
-          cx={cx}
-          cy={cy}
-          rx={size * r}
-          ry={size * r * 0.38}
-          fill="none"
-          stroke={C.accentLight}
-          strokeWidth={1}
-          opacity={0.55}
-          transform={`rotate(${i * 60} ${cx} ${cy})`}
-        />
-      ))}
-      <circle cx={cx} cy={cy} r={size * 0.16} fill="url(#coreGlow)" />
-    </svg>
-  );
+// ─── CURSOR GLOW — soft accent-colored light that follows the mouse ─────────
+function useCursorGlow() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || window.matchMedia("(pointer: coarse)").matches) return;
+    const move = (e) => {
+      el.style.transform = `translate3d(${e.clientX - 300}px, ${e.clientY - 300}px, 0)`;
+    };
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, []);
+  return ref;
 }
 
-// ─── Y2K WALLPAPER (abstract chrome wisps, swirl, sparkle dust) ──────────────
-const SPARKLES = [
-  { x: 120, y: 90, r: 2, delay: "0s" },
-  { x: 260, y: 220, r: 1.6, delay: "0.6s" },
-  { x: 80, y: 400, r: 2.2, delay: "1.2s" },
-  { x: 340, y: 560, r: 1.4, delay: "1.8s" },
-  { x: 520, y: 120, r: 2, delay: "0.3s" },
-  { x: 650, y: 340, r: 1.8, delay: "2.1s" },
-  { x: 780, y: 60, r: 1.5, delay: "1.5s" },
-  { x: 900, y: 420, r: 2.4, delay: "0.9s" },
-  { x: 1020, y: 220, r: 1.6, delay: "2.6s" },
-  { x: 1120, y: 520, r: 2, delay: "1.1s" },
-  { x: 200, y: 650, r: 1.8, delay: "2.9s" },
-  { x: 460, y: 700, r: 1.4, delay: "0.4s" },
-  { x: 980, y: 640, r: 2.2, delay: "1.7s" },
-  { x: 1150, y: 120, r: 1.6, delay: "2.3s" },
-  { x: 40, y: 220, r: 1.8, delay: "0.8s" },
-  { x: 620, y: 480, r: 1.4, delay: "3.1s" },
-];
-
-function Y2KWallpaper() {
-  return (
-    <div className="hero-wallpaper" aria-hidden="true">
-      <svg
-        viewBox="0 0 1200 800"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ width: "100%", height: "100%", display: "block" }}
-      >
-        <defs>
-          <radialGradient id="bgDepth" cx="72%" cy="18%" r="75%">
-            <stop offset="0%" stopColor="#101B33" />
-            <stop offset="55%" stopColor="#0A1020" />
-            <stop offset="100%" stopColor="#050709" />
-          </radialGradient>
-          <linearGradient id="gradWispA" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="55%" stopColor={C.accentLight} />
-            <stop offset="100%" stopColor="#8A5CF6" />
-          </linearGradient>
-          <linearGradient id="gradWispB" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#8A5CF6" />
-            <stop offset="55%" stopColor={C.accentLight} />
-            <stop offset="100%" stopColor="#FFFFFF" />
-          </linearGradient>
-          <linearGradient id="gradWispC" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={C.accent} />
-            <stop offset="100%" stopColor="#FFFFFF" />
-          </linearGradient>
-          <radialGradient id="gradSwirl" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-            <stop offset="100%" stopColor={C.accentLight} stopOpacity="0" />
-          </radialGradient>
-          <filter id="blurLg" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="20" />
-          </filter>
-          <filter id="blurSm" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="7" />
-          </filter>
-        </defs>
-
-        <rect x="0" y="0" width="1200" height="800" fill="url(#bgDepth)" />
-
-        <circle
-          cx="920"
-          cy="140"
-          r="220"
-          fill="url(#gradSwirl)"
-          opacity="0.5"
-        />
-        <g className="swirl" style={{ transformOrigin: "920px 140px" }}>
-          <circle
-            cx="920"
-            cy="140"
-            r="60"
-            fill="none"
-            stroke={C.accentLight}
-            strokeWidth="1.4"
-            opacity="0.55"
-            strokeDasharray="3 9"
-          />
-          <circle
-            cx="920"
-            cy="140"
-            r="90"
-            fill="none"
-            stroke="#8A5CF6"
-            strokeWidth="1"
-            opacity="0.4"
-            strokeDasharray="2 13"
-          />
-          <circle
-            cx="920"
-            cy="140"
-            r="34"
-            fill="none"
-            stroke="#FFFFFF"
-            strokeWidth="1.6"
-            opacity="0.6"
-          />
-        </g>
-
-        <g className="ribbon ribbon-a">
-          <path
-            d="M -100,620 C 180,720 360,430 610,480 C 860,530 940,240 1320,140"
-            fill="none"
-            stroke="url(#gradWispA)"
-            strokeWidth="46"
-            strokeLinecap="round"
-            opacity="0.14"
-            filter="url(#blurLg)"
-          />
-          <path
-            d="M -100,620 C 180,720 360,430 610,480 C 860,530 940,240 1320,140"
-            fill="none"
-            stroke="url(#gradWispA)"
-            strokeWidth="20"
-            strokeLinecap="round"
-            opacity="0.32"
-            filter="url(#blurSm)"
-          />
-          <path
-            d="M -100,620 C 180,720 360,430 610,480 C 860,530 940,240 1320,140"
-            fill="none"
-            stroke="url(#gradWispA)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            opacity="0.85"
-          />
-        </g>
-        <g className="ribbon ribbon-b">
-          <path
-            d="M -60,120 C 240,20 400,280 660,230 C 920,180 1000,470 1320,560"
-            fill="none"
-            stroke="url(#gradWispB)"
-            strokeWidth="40"
-            strokeLinecap="round"
-            opacity="0.13"
-            filter="url(#blurLg)"
-          />
-          <path
-            d="M -60,120 C 240,20 400,280 660,230 C 920,180 1000,470 1320,560"
-            fill="none"
-            stroke="url(#gradWispB)"
-            strokeWidth="18"
-            strokeLinecap="round"
-            opacity="0.3"
-            filter="url(#blurSm)"
-          />
-          <path
-            d="M -60,120 C 240,20 400,280 660,230 C 920,180 1000,470 1320,560"
-            fill="none"
-            stroke="url(#gradWispB)"
-            strokeWidth="2.6"
-            strokeLinecap="round"
-            opacity="0.8"
-          />
-        </g>
-        <g className="ribbon ribbon-c">
-          <path
-            d="M 60,800 C 260,600 480,650 690,440 C 900,230 1010,300 1180,30"
-            fill="none"
-            stroke="url(#gradWispC)"
-            strokeWidth="30"
-            strokeLinecap="round"
-            opacity="0.12"
-            filter="url(#blurLg)"
-          />
-          <path
-            d="M 60,800 C 260,600 480,650 690,440 C 900,230 1010,300 1180,30"
-            fill="none"
-            stroke="url(#gradWispC)"
-            strokeWidth="14"
-            strokeLinecap="round"
-            opacity="0.26"
-            filter="url(#blurSm)"
-          />
-          <path
-            d="M 60,800 C 260,600 480,650 690,440 C 900,230 1010,300 1180,30"
-            fill="none"
-            stroke="url(#gradWispC)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            opacity="0.7"
-          />
-        </g>
-
-        {SPARKLES.map((s, i) => (
-          <circle
-            key={i}
-            className="sparkle"
-            cx={s.x}
-            cy={s.y}
-            r={s.r}
-            fill="#FFFFFF"
-            style={{ animationDelay: s.delay }}
-          />
-        ))}
-      </svg>
-      <div className="shine-sweep" />
-    </div>
-  );
-}
-
-// ─── LED MARQUEE ──────────────────────────────────────────────────────────────
-function Marquee() {
-  const words = [
-    "FULL STACK",
-    "CASABLANCA",
-    "REACT.JS",
-    "SPRING BOOT 3",
-    "LARAVEL",
-    "STATUS: ONLINE",
-    "PYTHON",
-    "GROQ AI",
-    "MONGODB",
-    "MACHINE LEARNING",
-  ];
-  const all = [...words, ...words];
-  return (
-    <div
-      style={{
-        overflow: "hidden",
-        borderTop: `1px solid ${C.hairline}`,
-        borderBottom: `1px solid ${C.hairline}`,
-        padding: "12px 0",
-        background: "#000",
-        boxShadow: "inset 0 2px 6px rgba(0,0,0,0.6)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          width: "max-content",
-          animation: "marqueeScroll 22s linear infinite",
-        }}
-      >
-        {all.map((w, i) => (
-          <span
-            key={i}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              fontFamily: T.mono,
-              fontSize: 11,
-              fontWeight: 700,
-              color: C.led,
-              textShadow: "0 0 6px rgba(60,255,122,0.75)",
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              padding: "0 20px",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {w}
-            <span style={{ color: C.chrome3, marginLeft: 20 }}>▪</span>
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── BOOT SCREEN ──────────────────────────────────────────────────────────────
-function BootScreen({ onDone }) {
-  const [count, setCount] = useState(0);
+// ─── REVEAL WRAPPER ───────────────────────────────────────────────────────────
+function Reveal({ id, as: Tag = "div", className = "", children, ...rest }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (count >= BOOT_LINES.length) {
-      const t = setTimeout(onDone, 750);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => setCount((c) => c + 1), count < 2 ? 260 : 110);
-    return () => clearTimeout(t);
-  }, [count, onDone]);
-
-  useEffect(() => {
-    const skip = () => onDone();
-    window.addEventListener("keydown", skip);
-    return () => window.removeEventListener("keydown", skip);
-  }, [onDone]);
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            setVisible(true);
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.12 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <div
-      className="boot-screen"
-      onClick={onDone}
-      role="button"
-      aria-label="Skip boot sequence"
-    >
-      <div className="boot-text">
-        {BOOT_LINES.slice(0, count).map((l, i) => (
-          <div key={i}>{l || "\u00A0"}</div>
-        ))}
-        {count < BOOT_LINES.length && <span className="boot-cursor">█</span>}
-      </div>
-      <div className="boot-skip">SKIP ▸▸</div>
-    </div>
-  );
-}
-
-// ─── WINDOW CHROME ────────────────────────────────────────────────────────────
-function Win({ id, title, icon, statusText, children, bodyStyle }) {
-  return (
-    <div className="win" id={id}>
-      <div className="win-title">
-        <div className="win-title-left">
-          {icon && <PixelIcon type={icon} size={13} />}
-          <span>{title}</span>
-        </div>
-        <div className="win-buttons">
-          <span className="win-btn">–</span>
-          <span className="win-btn">▢</span>
-          <span className="win-btn win-btn-close">×</span>
-        </div>
-      </div>
-      <div className="win-body" style={{ padding: 26, ...bodyStyle }}>
-        {children}
-      </div>
-      {statusText && (
-        <div className="win-status">
-          <span>{statusText}</span>
-          <span>SAIF-OS</span>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Label({ children }) {
-  return (
-    <div
-      style={{
-        fontFamily: T.mono,
-        fontSize: 10.5,
-        fontWeight: 700,
-        letterSpacing: "0.2em",
-        textTransform: "uppercase",
-        marginBottom: 14,
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-        color: C.accentLight,
-      }}
-    >
-      <span
-        style={{
-          width: 7,
-          height: 7,
-          background: C.led,
-          boxShadow: `0 0 8px ${C.led}`,
-          display: "inline-block",
-        }}
-      />
-      SYS://{children}
-    </div>
-  );
-}
-
-function H2({ children }) {
-  return (
-    <h2
-      style={{
-        fontFamily: T.display,
-        fontWeight: 700,
-        fontSize: "clamp(21px, 3vw, 30px)",
-        letterSpacing: "0.01em",
-        lineHeight: 1.25,
-        margin: "0 0 22px",
-        color: C.text,
-        textTransform: "uppercase",
-      }}
+    <Tag
+      ref={ref}
+      id={id}
+      className={`reveal ${visible ? "visible" : ""} ${className}`}
+      {...rest}
     >
       {children}
-    </h2>
+    </Tag>
+  );
+}
+
+// ─── SECTION HEADING ──────────────────────────────────────────────────────────
+function SectionHeading({ num, children }) {
+  return (
+    <div className="sh">
+      <span className="sh-num">{num}.</span>
+      <h2>{children}</h2>
+      <span className="sh-rule" />
+    </div>
   );
 }
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 export default function Portfolio() {
-  const [booted, setBooted] = useState(() => {
-    if (typeof window !== "undefined" && window.matchMedia) {
-      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    }
-    return false;
-  });
-  const [scrolled, setScrolled] = useState(false);
-  const [vis, setVis] = useState({});
-  const [active, setActive] = useState("desktop");
-  const [startOpen, setStartOpen] = useState(false);
-  const [clock, setClock] = useState(() => new Date());
-  const [meters, setMeters] = useState({ cpu: 34, ram: 58 });
+  const [active, setActive] = useState("about");
+  const glowRef = useCursorGlow();
 
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href =
-      "https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=VT323&family=Space+Mono:wght@400;700&display=swap";
+      "https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap";
     document.head.appendChild(link);
 
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
-
-    const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => {
-          if (e.isIntersecting)
-            setVis((v) => ({ ...v, [e.target.dataset.id]: true }));
-        }),
-      { threshold: 0.08 },
+    const sections = NAV.map((n) => document.getElementById(n.id)).filter(
+      Boolean,
     );
-    document.querySelectorAll("[data-id]").forEach((el) => io.observe(el));
-
-    const io2 = new IntersectionObserver(
-      (entries) =>
+    const spy = new IntersectionObserver(
+      (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) setActive(e.target.id);
-        }),
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
     );
-    NAV_ALL.forEach((n) => {
-      const el = document.getElementById(n.id);
-      if (el) io2.observe(el);
-    });
-
-    const clockT = setInterval(() => setClock(new Date()), 10000);
-    const meterT = setInterval(() => {
-      setMeters((m) => ({
-        cpu: clamp(m.cpu + (Math.random() * 16 - 8), 12, 94),
-        ram: clamp(m.ram + (Math.random() * 10 - 5), 30, 88),
-      }));
-    }, 2200);
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      io.disconnect();
-      io2.disconnect();
-      clearInterval(clockT);
-      clearInterval(meterT);
-    };
+    sections.forEach((s) => spy.observe(s));
+    return () => spy.disconnect();
   }, []);
-
-  const anim = (id, delay = 0) => ({
-    opacity: vis[id] ? 1 : 0,
-    transform: vis[id] ? "none" : "translateY(24px)",
-    transition: `opacity 0.7s ${delay}s ease, transform 0.7s ${delay}s ease`,
-  });
 
   const go = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setStartOpen(false);
   };
-
-  const clockStr = clock.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
 
   return (
     <>
       <style>{`
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { background: ${C.bgDeep}; overflow-x: hidden; color: ${C.text}; }
-        a { text-decoration: none; color: inherit; }
-        button { font: inherit; }
+        html,body{ margin:0; padding:0; background:${C.navy}; overflow-x:hidden; }
+        *,*::before,*::after{ box-sizing:border-box; }
+        html{ scroll-behavior:smooth; }
+        .pf{ background:${C.navy}; color:${C.slate}; font-family:${SANS}; font-size:18px; line-height:1.6; min-height:100vh; position:relative; overflow-x:hidden; }
+        .pf a{ color:inherit; text-decoration:none; }
+        .pf ::selection{ background:rgba(${AR},0.35); color:${C.white}; }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: ${C.bgDeep}; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, ${C.chrome2}, ${C.chrome3}); border: 1px solid ${C.bgDeep}; }
-        .scroll-row::-webkit-scrollbar { display: none; }
-        .scroll-row { scrollbar-width: none; }
+        /* ── cursor glow ── */
+        .cursor-glow{ position:fixed; top:0; left:0; width:600px; height:600px; border-radius:50%; pointer-events:none; z-index:0; will-change:transform;
+          background:radial-gradient(circle, rgba(${AR},0.4) 0%, rgba(${AR},0.14) 35%, transparent 70%); mix-blend-mode:screen; }
 
-        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
-        @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes bootBlink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+        /* ── rails ── */
+        .rail-left{ position:fixed; left:40px; top:0; bottom:0; width:210px; display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between; padding:48px 0; z-index:20; }
+        .logo{ width:42px; height:42px; border:1px solid ${C.accent}; border-radius:12px; display:flex; align-items:center; justify-content:center; font-family:${MONO}; font-weight:600; color:${C.accent}; font-size:14px; transition:background .25s ease; background:none; }
+        .logo:hover{ background:rgba(${AR},0.15); }
+        .rail-nav{ display:flex; flex-direction:column; gap:18px; }
+        .rail-nav-item{ display:flex; align-items:baseline; gap:10px; background:none; border:none; border-left:2px solid transparent; padding:4px 6px 4px 14px; cursor:pointer; text-align:left; transition:border-color .25s ease, transform .25s ease; }
+        .rail-nav-item .num{ font-family:${MONO}; font-size:12px; color:${C.accent}; }
+        .rail-nav-item .label{ font-family:${SANS}; font-size:13px; color:${C.slate}; transition:color .25s ease; white-space:nowrap; }
+        .rail-nav-item:hover{ transform:translateX(3px); }
+        .rail-nav-item:hover .label, .rail-nav-item.on .label{ color:${C.white}; }
+        .rail-nav-item:hover, .rail-nav-item.on{ border-left-color:${C.accent}; }
+        .rail-social{ display:flex; flex-direction:column; align-items:flex-start; gap:18px; position:relative; padding-left:14px; }
+        .rail-social::before{ content:""; width:1px; height:70px; background:${C.slate}; margin-bottom:18px; margin-left:4px; }
+        .rail-social a{ color:${C.slate}; transition:color .25s ease, transform .25s ease; }
+        .rail-social a:hover{ color:${C.accent}; transform:translateY(-3px); }
 
-        @media (prefers-reduced-motion: reduce) {
-          * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        .rail-right{ position:fixed; right:24px; bottom:0; top:0; width:40px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:48px; z-index:20; }
+        .rail-email{ writing-mode:vertical-rl; font-family:${MONO}; font-size:12px; letter-spacing:.05em; color:${C.slate}; display:flex; flex-direction:column; align-items:center; gap:18px; transition:color .25s ease, transform .25s ease; }
+        .rail-email::after{ content:""; width:1px; height:70px; background:${C.slate}; }
+        .rail-email:hover{ color:${C.accent}; transform:translateY(-3px); }
+
+        /* ── content ── */
+        main{ position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:0 140px 0 300px; }
+        .hero{ min-height:100vh; display:flex; flex-direction:column; justify-content:center; }
+        .kicker{ font-family:${MONO}; color:${C.accent}; font-size:15px; margin-bottom:20px; }
+        .hero h1{ font-family:${SANS}; font-weight:700; color:${C.white}; font-size:clamp(38px,8vw,72px); line-height:1.1; margin:0 0 6px; }
+        .hero h2{ font-family:${SANS}; font-weight:600; color:${C.slate}; font-size:clamp(26px,5.5vw,50px); line-height:1.15; margin:0 0 24px; }
+        .hero p{ max-width:540px; color:${C.slate}; font-size:18px; }
+        .hero-socials{ display:none; align-items:center; gap:24px; margin-top:32px; }
+        .hero-socials a{ color:${C.slate}; transition:color .25s ease, transform .25s ease; }
+        .hero-socials a:hover{ color:${C.accent}; transform:translateY(-3px); }
+        .btn{ display:inline-flex; align-items:center; gap:8px; padding:16px 28px; border:1px solid ${C.accent}; color:${C.accent}; font-family:${MONO}; font-size:14px; border-radius:4px; transition:background .25s ease, transform .2s ease; width:fit-content; background:none; }
+        .btn:hover{ background:rgba(${AR},0.15); transform:translateY(-2px); }
+
+        section{ padding:100px 0; }
+        .reveal{ opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s ease; }
+        .reveal.visible{ opacity:1; transform:none; }
+
+        .sh{ display:flex; align-items:center; gap:12px; margin-bottom:40px; }
+        .sh-num{ font-family:${MONO}; color:${C.accent}; font-size:19px; font-weight:500; }
+        .sh h2{ font-family:${SANS}; color:${C.white}; font-weight:600; font-size:clamp(22px,4vw,28px); white-space:nowrap; }
+        .sh-rule{ flex:1; height:1px; background:${C.lightestNavy}; }
+
+        .about-main{ max-width:640px; }
+        .about-main p + p{ margin-top:16px; }
+        .tech-grid{ display:grid; grid-template-columns:1fr 1fr; gap:28px 32px; margin-top:40px; max-width:640px; }
+        .tech-cat h3{ font-family:${MONO}; font-size:13px; color:${C.ltSlate}; font-weight:500; margin-bottom:10px; }
+        .tech-cat ul{ list-style:none; margin:0; padding:0; }
+        .tech-cat li{ position:relative; padding-left:20px; font-size:14.5px; color:${C.slate}; margin-bottom:8px; }
+        .tech-cat li::before{ content:"▹"; position:absolute; left:0; color:${C.accent}; }
+
+        .exp{ display:flex; gap:32px; }
+        .tab-list{ display:flex; flex-direction:column; border-left:2px solid ${C.lightestNavy}; min-width:160px; }
+        .tab-list button{ text-align:left; background:none; border:none; padding:12px 20px; font-family:${SANS}; font-size:14px; color:${C.slate}; cursor:pointer; border-left:2px solid transparent; margin-left:-2px; transition:color .25s ease, background .25s ease, border-color .25s ease; }
+        .tab-list button.on{ color:${C.white}; background:${C.lightNavy}; border-left:2px solid ${C.accent}; }
+        .exp-panel{ flex:1; }
+        .exp-panel h3{ font-family:${SANS}; font-size:20px; color:${C.white}; font-weight:600; }
+        .exp-panel h3 span{ color:${C.accent}; font-weight:500; }
+        .exp-panel .range{ font-family:${MONO}; font-size:13px; color:${C.slate}; margin:6px 0 20px; }
+        .exp-panel ul{ list-style:none; margin:0; padding:0; }
+        .exp-panel li{ position:relative; padding-left:24px; margin-bottom:14px; font-size:16px; }
+        .exp-panel li::before{ content:"▹"; position:absolute; left:0; color:${C.accent}; }
+
+        .proj-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
+        .proj-card{ background:${C.lightNavy}; border-radius:6px; padding:28px; display:flex; flex-direction:column; transition:transform .25s ease, box-shadow .25s ease; }
+        .proj-card:hover{ transform:translateY(-6px); box-shadow:0 18px 34px -14px rgba(0,0,0,0.7); }
+        .proj-top{ display:flex; justify-content:space-between; align-items:center; color:${C.accent}; }
+        .proj-top a{ color:${C.slate}; transition:color .2s ease, transform .2s ease; }
+        .proj-top a:hover{ color:${C.accent}; transform:translateY(-2px); }
+        .proj-card h3{ font-family:${SANS}; color:${C.white}; font-size:19px; font-weight:600; margin-top:18px; }
+        .proj-tag{ font-family:${MONO}; font-size:11px; color:${C.accent}; text-transform:uppercase; letter-spacing:.04em; margin-top:2px; display:block; }
+        .proj-card p{ font-size:14.5px; margin-top:12px; flex:1; }
+        .proj-tech{ display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:20px; }
+        .proj-tech span{ font-family:${MONO}; font-size:12px; color:${C.ltSlate}; }
+
+        .edu-card{ background:${C.lightNavy}; border-radius:6px; padding:32px; max-width:680px; }
+        .edu-card h3{ font-family:${SANS}; color:${C.white}; font-size:19px; font-weight:600; }
+        .edu-card .org{ font-family:${MONO}; font-size:13px; color:${C.accent}; margin:6px 0 20px; }
+        .edu-tags{ display:flex; flex-wrap:wrap; gap:8px; }
+        .edu-tags span{ font-family:${MONO}; font-size:12px; color:${C.ltSlate}; border:1px solid ${C.lightestNavy}; border-radius:4px; padding:4px 10px; }
+
+        .cert-row{ display:flex; justify-content:space-between; gap:20px; padding:22px 0; border-bottom:1px solid ${C.lightestNavy}; flex-wrap:wrap; }
+        .cert-row:last-child{ border-bottom:none; }
+        .cert-row h3{ font-family:${SANS}; color:${C.white}; font-size:16px; font-weight:600; }
+        .cert-row .issuer{ font-family:${MONO}; font-size:12px; color:${C.accent}; margin:4px 0; }
+        .cert-row p{ font-size:14px; margin-top:4px; max-width:480px; }
+        .cert-row a{ display:inline-block; margin-top:8px; font-family:${MONO}; font-size:12px; color:${C.slate}; border-bottom:1px solid ${C.slate}; }
+        .cert-row a:hover{ color:${C.accent}; border-color:${C.accent}; }
+        .cert-status{ display:flex; align-items:center; gap:8px; font-family:${MONO}; font-size:12px; color:${C.slate}; white-space:nowrap; flex-shrink:0; }
+        .dot{ width:7px; height:7px; border-radius:50%; }
+        .dot.on{ background:${C.accent}; box-shadow:0 0 6px ${C.accent}; }
+        .dot.off{ border:1.5px solid ${C.slate}; }
+
+        .contact{ text-align:center; max-width:600px; margin:0 auto; }
+        .contact p{ margin-top:18px; }
+        .contact .btn{ margin:36px auto 0; }
+        footer{ position:relative; z-index:1; text-align:center; padding:40px 0 100px; font-family:${MONO}; font-size:12px; color:${C.slate}; }
+
+        @media (max-width:1080px){
+          .rail-left, .rail-right{ display:none; }
+          main{ padding:0 24px; }
+          .hero{ min-height:auto; padding:80px 0 60px; }
+          .hero-socials{ display:flex; }
+          .exp{ flex-direction:column; }
+          .tab-list{ flex-direction:row; border-left:none; border-bottom:2px solid ${C.lightestNavy}; overflow-x:auto; }
+          .tab-list button{ border-left:none; border-bottom:2px solid transparent; margin-left:0; margin-bottom:-2px; white-space:nowrap; }
+          .tab-list button.on{ border-left:none; border-bottom:2px solid ${C.accent}; }
         }
-
-        .boot-screen {
-          position: fixed; inset: 0; z-index: 999; background: #010203;
-          display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-          padding: 8vw; cursor: pointer;
+        @media (max-width:640px){
+          .pf{ font-size:16px; }
+          section{ padding:70px 0; }
+          .tech-grid{ grid-template-columns:1fr; }
         }
-        .boot-text { font-family: ${T.pixel}; font-size: clamp(16px, 2.4vw, 22px); color: ${C.led}; line-height: 1.5; text-shadow: 0 0 6px rgba(60,255,122,0.5); }
-        .boot-cursor { animation: bootBlink 1s step-end infinite; color: ${C.led}; }
-        .boot-skip { position: absolute; bottom: 26px; right: 30px; font-family: ${T.pixel}; font-size: 15px; color: ${C.chrome3}; letter-spacing: 0.1em; }
-
-        .win {
-          background: ${C.panelSteel};
-          border: 1px solid #000;
-          box-shadow: inset 1px 1px 0 rgba(255,255,255,0.14), inset -1px -1px 0 rgba(0,0,0,0.6), 0 14px 34px rgba(0,0,0,0.45);
-          border-radius: 3px;
-          overflow: hidden;
+        @media (prefers-reduced-motion: reduce){
+          *{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
         }
-        .win-title {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 7px 9px 7px 11px;
-          background: linear-gradient(180deg, #38455A 0%, #1B2230 55%, #12161F 100%);
-          border-bottom: 1px solid rgba(0,0,0,0.6);
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
-        }
-        .win-title-left { display: flex; align-items: center; gap: 8px; font-family: ${T.body}; font-weight: 700; font-size: 11.5px; letter-spacing: 0.05em; color: ${C.chrome1}; text-transform: uppercase; }
-        .win-buttons { display: flex; gap: 5px; }
-        .win-btn {
-          width: 15px; height: 15px; display: flex; align-items: center; justify-content: center;
-          background: linear-gradient(180deg, ${C.chrome1}, ${C.chrome3});
-          box-shadow: inset 1px 1px 0 rgba(255,255,255,0.7), inset -1px -1px 0 rgba(0,0,0,0.5);
-          border-radius: 2px; font-size: 10px; line-height: 1; color: #1a1d24; font-weight: 900;
-        }
-        .win-btn-close:hover { background: linear-gradient(180deg, #FF8A80, #C4291D); color: #fff; }
-        .win-status {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 5px 12px; background: #0A0D13; border-top: 1px solid rgba(255,255,255,0.06);
-          font-family: ${T.mono}; font-size: 10px; color: ${C.textSec}; letter-spacing: 0.04em;
-        }
-
-        .taskbar {
-          position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; height: 46px;
-          display: flex; align-items: center; gap: 10px; padding: 0 10px;
-          background: linear-gradient(180deg, #1A2230 0%, #0A0D14 100%);
-          border-top: 1px solid rgba(255,255,255,0.1);
-          box-shadow: 0 -6px 20px rgba(0,0,0,0.5);
-        }
-        .dock-icon { display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; cursor: pointer; padding: 2px 8px; border-radius: 4px; transition: transform 0.18s ease, background 0.18s ease; }
-        .dock-icon:hover, .dock-icon:focus-visible { transform: translateY(-4px) scale(1.1); background: rgba(79,195,255,0.12); }
-        .dock-icon span { font-family: 'Space Mono', monospace; font-size: 9px; color: #8B94A6; text-align: center; letter-spacing: 0.02em; max-width: 56px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .dock-icon:hover span, .dock-icon:focus-visible span { color: #4FC3FF; }
-        .start-btn {
-          display: flex; align-items: center; gap: 6px;
-          background: linear-gradient(180deg, #1E8AE8, #00417A);
-          border: 1px solid #002d55; border-radius: 4px; color: #fff;
-          padding: 7px 14px; font-family: ${T.display}; font-weight: 800; font-size: 11.5px;
-          letter-spacing: 0.05em; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-          text-transform: uppercase; flex-shrink: 0;
-        }
-        .tray { display: flex; align-items: center; gap: 12px; padding: 0 6px 0 14px; border-left: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-        .meter { display: flex; align-items: center; gap: 5px; }
-        .meter span { font-family: ${T.mono}; font-size: 9px; color: ${C.textSec}; }
-        .meter-track { width: 30px; height: 6px; background: #03050a; border: 1px solid rgba(255,255,255,0.1); }
-        .meter-fill { height: 100%; background: ${C.led}; transition: width 0.6s ease; }
-        .tray-clock { font-family: ${T.pixel}; font-size: 17px; color: ${C.chrome1}; letter-spacing: 0.04em; }
-
-        .start-menu {
-          position: fixed; left: 10px; bottom: 52px; width: 236px; z-index: 95;
-          background: linear-gradient(180deg, #1B2230, #0D1119);
-          border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
-          box-shadow: 0 14px 40px rgba(0,0,0,0.6);
-          display: flex; overflow: hidden;
-        }
-        .start-menu-rail { width: 20px; background: linear-gradient(180deg, ${C.accent}, #003E73); display: flex; align-items: center; justify-content: center; }
-        .start-menu-rail span { writing-mode: vertical-rl; font-family: ${T.display}; font-size: 11px; font-weight: 800; color: #fff; letter-spacing: 0.15em; }
-        .start-menu-items { flex: 1; padding: 6px; }
-        .start-menu-item { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: none; color: ${C.text}; padding: 9px 10px; border-radius: 3px; font-family: ${T.body}; font-size: 12.5px; cursor: pointer; }
-        .start-menu-item:hover { background: ${C.accent}; color: #fff; }
-        .start-menu-div { height: 1px; background: rgba(255,255,255,0.1); margin: 6px 4px; }
-
-        .menubar {
-          position: fixed; top: 0; left: 0; right: 0; z-index: 90; height: 52px;
-          display: flex; align-items: center; justify-content: space-between; padding: 0 18px;
-          background: linear-gradient(180deg, #1D2431, #0B0E15);
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .hero-wallpaper { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
-        .ribbon { animation: driftRibbon 26s ease-in-out infinite; }
-        .ribbon-b { animation-duration: 32s; animation-direction: alternate; }
-        .ribbon-c { animation-duration: 22s; animation-direction: alternate-reverse; }
-        @keyframes driftRibbon { 0%,100% { transform: translate(0,0); } 50% { transform: translate(18px,-14px); } }
-        .swirl { animation: spin 90s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .sparkle { animation: twinkle 3.2s ease-in-out infinite; }
-        @keyframes twinkle { 0%,100% { opacity: 0.15; } 50% { opacity: 0.95; } }
-        .shine-sweep { position: absolute; top: 0; bottom: 0; width: 26%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); animation: sweepShine 9s ease-in-out infinite; pointer-events: none; }
-        @keyframes sweepShine { 0% { transform: translateX(-120%) skewX(-12deg); } 100% { transform: translateX(420%) skewX(-12deg); } }
-
-        .dock-handle { position: relative; z-index: 3; display: flex; justify-content: center; align-items: center; gap: 3px; width: 60px; height: 9px; margin: 16px auto -1px; background: linear-gradient(180deg, #2E3542, #161B24); border: 1px solid rgba(255,255,255,0.12); border-bottom: none; border-radius: 5px 5px 0 0; }
-        .dock-handle span { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.35); }
-        .icon-dock { position: relative; z-index: 2; display: flex; justify-content: center; flex-wrap: wrap; gap: 4px; margin: 0 auto 0; padding: 10px 12px; max-width: 560px; background: linear-gradient(180deg, #232A36, #12161F); border: 1px solid rgba(255,255,255,0.1); border-top-color: rgba(255,255,255,0.2); border-radius: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 28px rgba(0,0,0,0.4); }
-        .icon-dock-btn { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 78px; background: none; border: none; cursor: pointer; padding: 8px 4px; border-radius: 7px; transition: transform 0.18s ease, background 0.18s ease; }
-        .icon-dock-btn:hover, .icon-dock-btn:focus-visible { transform: translateY(-5px); background: rgba(79,195,255,0.12); }
-        .icon-dock-btn span { font-family: ${T.mono}; font-size: 9.5px; color: ${C.textSec}; text-align: center; letter-spacing: 0.02em; }
-        .icon-dock-btn:hover span, .icon-dock-btn:focus-visible span { color: ${C.accentLight}; }
-
-        .about-grid { display: grid; grid-template-columns: 128px 1fr; gap: 40px; align-items: start; }
-        .exp-grid { display: grid; grid-template-columns: 168px 1fr; gap: 34px; }
-        @media (max-width: 680px) { .about-grid, .exp-grid { grid-template-columns: 1fr; } }
-
-        .proj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 26px; }
-        .proj-card { transform: rotate(var(--r, 0deg)); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .proj-card:hover { transform: rotate(0deg) translateY(-4px); position: relative; z-index: 5; }
-
-        .cert-header { display: grid; grid-template-columns: 1fr 140px 90px; gap: 10px; padding: 0 10px 10px; font-family: ${T.mono}; font-size: 10px; color: ${C.textSec}; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid ${C.hairline}; }
-        .cert-row { display: grid; grid-template-columns: 1fr 140px 90px; gap: 10px; align-items: center; padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.06); font-family: ${T.body}; font-size: 12.5px; color: ${C.textSec}; }
-        .cert-row:hover { background: ${C.accent}; color: #fff; }
-        .cert-row:hover .cert-issuer, .cert-row:hover .cert-name { color: #fff; }
-        @media (max-width: 680px) { .cert-header { display: none; } .cert-row { grid-template-columns: 1fr; gap: 4px; } }
-
-        .term-line { font-family: ${T.pixel}; font-size: 16px; color: ${C.led}; line-height: 1.85; text-shadow: 0 0 4px rgba(60,255,122,0.4); }
-
-        .pill { background: linear-gradient(180deg, #1B202B, #0E1119); border: 1px solid rgba(255,255,255,0.08); border-radius: 3px; padding: 5px 11px; font-family: ${T.mono}; font-size: 11px; font-weight: 700; color: ${C.textSec}; }
-        .tag { background: rgba(0,114,206,0.16); border: 1px solid rgba(79,195,255,0.3); border-radius: 3px; padding: 3px 9px; font-family: ${T.mono}; font-weight: 700; font-size: 10px; letter-spacing: 0.03em; color: ${C.accentLight}; text-transform: uppercase; }
-
-        .btn-primary { background: linear-gradient(180deg, #1E8AE8, #00417A); color: #fff; border: 1px solid #002d55; border-radius: 4px; padding: 12px 24px; font-family: ${T.display}; font-weight: 800; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 6px 18px rgba(0,114,206,0.35); }
-        .btn-ghost { background: linear-gradient(180deg, #20262F, #12161F); color: ${C.textSec}; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 12px 24px; font-family: ${T.display}; font-weight: 800; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; display: inline-block; }
-        .btn-ghost:hover, .btn-primary:hover { filter: brightness(1.08); }
-
-        .fade-link { color: ${C.chrome3}; font-family: ${T.mono}; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; }
-        .fade-link:hover { color: ${C.accentLight}; }
-
-        button:focus-visible, a:focus-visible { outline: 2px solid ${C.accentLight}; outline-offset: 2px; }
-
-        @media (max-width: 680px) { .win-body { padding: 18px !important; } }
       `}</style>
 
-      {!booted && <BootScreen onDone={() => setBooted(true)} />}
+      <div className="pf">
+        <div className="cursor-glow" ref={glowRef} />
 
-      <div style={{ opacity: booted ? 1 : 0, transition: "opacity 0.6s ease" }}>
-        {/* ── MENU BAR ── */}
-        <div
-          className="menubar"
-          style={{
-            boxShadow: scrolled ? "0 6px 18px rgba(0,0,0,0.5)" : "none",
-          }}
-        >
+        {/* left rail */}
+        <aside className="rail-left">
           <button
-            type="button"
-            onClick={() => go("desktop")}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
+            className="logo"
+            onClick={() => go("about")}
+            aria-label="Home"
           >
-            <span
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                background: C.led,
-                boxShadow: `0 0 8px ${C.led}`,
-                animation: "blink 2.4s ease-in-out infinite",
-                display: "inline-block",
-              }}
-            />
-            <span
-              style={{
-                fontFamily: T.display,
-                fontWeight: 800,
-                fontSize: 14,
-                letterSpacing: "0.1em",
-                color: C.chrome1,
-              }}
-            >
-              FS.SYS
-            </span>
+            FS
           </button>
-          <div
-            className="scroll-row"
-            style={{
-              display: "flex",
-              gap: 2,
-              overflowX: "auto",
-              maxWidth: "56%",
-            }}
-          >
+          <nav className="rail-nav" aria-label="Primary">
             {NAV.map((n) => (
               <button
                 key={n.id}
-                type="button"
+                className={`rail-nav-item ${active === n.id ? "on" : ""}`}
                 onClick={() => go(n.id)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: active === n.id ? C.accentLight : C.textSec,
-                  fontFamily: T.mono,
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  padding: "6px 10px",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
               >
-                {n.label}
+                <span className="num">{n.num}</span>
+                <span className="label">{n.label}</span>
               </button>
             ))}
+          </nav>
+          <div className="rail-social">
+            {SOCIALS.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target={s.icon === "mail" ? undefined : "_blank"}
+                rel="noopener noreferrer"
+                aria-label={s.label}
+              >
+                <Icon name={s.icon} size={19} />
+              </a>
+            ))}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 24, height: 24 }}>
-              <ChipBadge size={48} />
-            </div>
-          </div>
-        </div>
+        </aside>
 
-        {/* ── DESKTOP / HERO ── */}
-        <section
-          id="desktop"
-          style={{
-            minHeight: "100vh",
-            position: "relative",
-            overflow: "hidden",
-            paddingTop: 70,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            background: C.bgDeep,
-          }}
-        >
-          <Y2KWallpaper />
+        {/* right rail */}
+        <aside className="rail-right">
+          <a className="rail-email" href="mailto:saiffadoua@email.com">
+            saiffadoua@email.com
+          </a>
+        </aside>
 
-          <div
-            style={{
-              position: "relative",
-              zIndex: 2,
-              maxWidth: 620,
-              margin: "0 auto",
-              width: "100%",
-              padding: "0 20px",
-            }}
-          >
-            <Win
-              title="WHOAMI.EXE"
-              icon="terminal"
-              statusText="STATUS: ONLINE — v3.1"
-            >
-              <div style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 8,
-                    background: "#0D1119",
-                    border: `1px solid ${C.hairline}`,
-                    borderRadius: 4,
-                    padding: "6px 14px",
-                    fontFamily: T.mono,
-                    fontSize: 10.5,
-                    fontWeight: 700,
-                    color: C.textSec,
-                    marginBottom: 26,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                  }}
+        <main>
+          {/* hero */}
+          <section className="hero" id="hero">
+            <p className="kicker">Hi, my name is</p>
+            <h1>Fadwa Saif.</h1>
+            <h2>I build things for the web.</h2>
+            <p>
+              I'm a full-stack developer based in Casablanca, Morocco, finishing
+              my Full Stack Web Development diploma at ISGI. I build products
+              end to end — React on the front, Laravel and Spring Boot
+              underneath.
+            </p>
+            <div className="hero-socials">
+              {SOCIALS.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target={s.icon === "mail" ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
                 >
-                  <span
-                    style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: "50%",
-                      background: C.led,
-                      boxShadow: `0 0 6px ${C.led}`,
-                      display: "inline-block",
-                      animation: "blink 2s ease-in-out infinite",
-                    }}
-                  />
-                  LOC: Casablanca, Morocco
-                </div>
-                <h1
-                  style={{
-                    fontFamily: T.display,
-                    fontWeight: 900,
-                    fontSize: "clamp(34px, 8vw, 58px)",
-                    letterSpacing: "0.01em",
-                    lineHeight: 1.1,
-                    margin: "0 0 20px",
-                    textTransform: "uppercase",
-                    backgroundImage: `linear-gradient(180deg, ${C.chrome1} 0%, ${C.chrome2} 45%, ${C.accentLight} 100%)`,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    filter: "drop-shadow(0 2px 0 rgba(0,0,0,0.6))",
-                  }}
-                >
-                  Fadwa Saif.
-                </h1>
-                <p
-                  style={{
-                    fontFamily: T.body,
-                    fontSize: "clamp(13.5px, 1.6vw, 15.5px)",
-                    color: C.textSec,
-                    lineHeight: 1.8,
-                    maxWidth: 420,
-                    margin: "0 auto 30px",
-                  }}
-                >
-                  Full Stack Developer who builds real products — from the first
-                  line of code to production.
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: 12,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => go("projects")}
-                  >
-                    View My Work
-                  </button>
-                  <a
-                    href="https://github.com/Fadwa-Saif"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-ghost"
-                  >
-                    GitHub ↗
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/fadwa-saif-a7280922b/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-ghost"
-                  >
-                    LinkedIn ↗
-                  </a>
-                </div>
-              </div>
-            </Win>
-          </div>
-        </section>
-
-        {/* ── ABOUT ── */}
-        <section
-          id="about"
-          style={{ background: C.bgPanel, padding: "96px 20px" }}
-        >
-          <div
-            data-id="about"
-            style={{ maxWidth: 900, margin: "0 auto", ...anim("about") }}
-          >
-            <Label>ABOUT</Label>
-            <Win title="ABOUT_ME.SYS" icon="doc" statusText="Ready.">
-              <div className="about-grid">
-                <div>
-                  <div
-                    style={{
-                      width: 100,
-                      height: 100,
-                      borderRadius: 6,
-                      backgroundImage: `linear-gradient(160deg, ${C.chrome1} 0%, ${C.chrome2} 40%, ${C.chrome3} 100%)`,
-                      border: "1px solid rgba(0,0,0,0.5)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontFamily: T.display,
-                      fontWeight: 900,
-                      fontSize: 26,
-                      color: "#12161F",
-                      marginBottom: 14,
-                      boxShadow:
-                        "0 8px 26px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.6)",
-                    }}
-                  >
-                    FS
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: T.display,
-                      fontWeight: 700,
-                      fontSize: 13,
-                      color: C.text,
-                      marginBottom: 3,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Fadwa Saif
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: T.mono,
-                      fontSize: 10,
-                      color: C.textSec,
-                    }}
-                  >
-                    UNIT: FULL_STACK_DEV
-                  </div>
-                </div>
-                <div>
-                  <h2
-                    style={{
-                      fontFamily: T.display,
-                      fontWeight: 700,
-                      fontSize: "clamp(18px, 2.6vw, 25px)",
-                      lineHeight: 1.35,
-                      margin: "0 0 16px",
-                      color: C.text,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    I don't just write code.
-                    <br />I build products.
-                  </h2>
-                  <p
-                    style={{
-                      fontFamily: T.body,
-                      color: C.textSec,
-                      lineHeight: 1.85,
-                      fontSize: 14,
-                      marginBottom: 12,
-                    }}
-                  >
-                    Based in Casablanca, Morocco. Full Stack Developer
-                    completing my TS Développement Digital Web Full Stack
-                    diploma at ISGI Casablanca. My work spans React frontends,
-                    Laravel and Spring Boot APIs, MySQL & MongoDB databases, and
-                    ML experiments with Python.
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: T.body,
-                      color: C.textSec,
-                      lineHeight: 1.85,
-                      fontSize: 14,
-                      marginBottom: 28,
-                    }}
-                  >
-                    Beyond the code, I think like a builder — I've pitched a
-                    SaaS product to a professional jury, care about real-world
-                    impact, and always ask whether what I'm shipping actually
-                    solves a problem worth solving.
-                  </p>
-                  <div style={{ display: "flex", flexWrap: "wrap" }}>
-                    {[
-                      ["3+", "Shipped projects"],
-                      ["6+", "Technologies"],
-                      ["2026", "Graduating"],
-                    ].map(([val, label], i) => (
-                      <div
-                        key={label}
-                        style={{
-                          padding: "0 26px",
-                          borderLeft:
-                            i > 0 ? `1px solid ${C.hairline}` : "none",
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontFamily: T.display,
-                            fontWeight: 800,
-                            fontSize: 24,
-                            color: C.accentLight,
-                            textShadow: `0 0 14px ${C.accentGlow}`,
-                          }}
-                        >
-                          {val}
-                        </div>
-                        <div
-                          style={{
-                            fontFamily: T.mono,
-                            fontSize: 10,
-                            color: C.textSec,
-                            marginTop: 4,
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          {label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Win>
-          </div>
-        </section>
-
-        {/* ── SKILLS ── */}
-        <section
-          id="skills"
-          style={{ background: C.bgDeep, padding: "96px 20px" }}
-        >
-          <div
-            data-id="skills"
-            style={{ maxWidth: 900, margin: "0 auto", ...anim("skills") }}
-          >
-            <Label>SKILLS</Label>
-            <H2>Technologies I work with</H2>
-            <Win
-              title="DEVICE_MANAGER.SYS"
-              icon="gear"
-              statusText={`${Object.values(SKILLS).flat().length} devices found — all functioning properly`}
-            >
-              {Object.entries(SKILLS).map(([cat, items]) => (
-                <div key={cat} style={{ marginBottom: 20 }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      marginBottom: 10,
-                      fontFamily: T.body,
-                      fontWeight: 700,
-                      fontSize: 12.5,
-                      color: C.accentLight,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                    <span style={{ color: C.chrome3 }}>▸</span>
-                    {cat}
-                    <span
-                      style={{
-                        marginLeft: "auto",
-                        fontFamily: T.mono,
-                        fontSize: 10,
-                        color: C.textSec,
-                      }}
-                    >
-                      {items.length} item{items.length > 1 ? "s" : ""}
-                    </span>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: 8,
-                      paddingLeft: 18,
-                      borderLeft: `1px dashed ${C.hairline}`,
-                    }}
-                  >
-                    {items.map((s) => (
-                      <span key={s} className="pill">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                  <Icon name={s.icon} size={22} />
+                </a>
               ))}
-            </Win>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        {/* ── PROJECTS ── */}
-        <section
-          id="projects"
-          style={{ background: C.bgPanel, padding: "96px 20px" }}
-        >
-          <div
-            data-id="projects"
-            style={{ maxWidth: 980, margin: "0 auto", ...anim("projects") }}
-          >
-            <Label>PROJECTS</Label>
-            <H2>Things I've built</H2>
-            <Win
-              title="PROJECTS"
-              icon="folder"
-              statusText={`${PROJECTS.length} items — 1 featured`}
-            >
-              <div className="proj-grid">
-                {PROJECTS.map((p, i) => (
-                  <div
-                    key={p.id}
-                    className="win proj-card"
-                    style={{ "--r": i % 2 === 0 ? "-1deg" : "1.2deg" }}
-                  >
-                    <div className="win-title">
-                      <div className="win-title-left">
-                        <PixelIcon type="folder" size={13} />
-                        <span>
-                          {p.name.toUpperCase().replace(/\s+/g, "_")}.EXE
-                        </span>
-                      </div>
-                      <div className="win-buttons">
-                        <span className="win-btn">–</span>
-                        <span className="win-btn">▢</span>
-                        <span className="win-btn win-btn-close">×</span>
-                      </div>
-                    </div>
-                    <div
-                      className="win-body"
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 12,
-                        padding: 22,
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontFamily: T.mono,
-                          fontSize: 10,
-                          color: C.textSec,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.08em",
-                        }}
-                      >
-                        {p.tag}
-                      </div>
-                      <h3
-                        style={{
-                          fontFamily: T.display,
-                          fontWeight: 700,
-                          fontSize: 18,
-                          color: p.featured ? C.accentLight : C.text,
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        {p.name}
-                      </h3>
-                      <p
-                        style={{
-                          fontFamily: T.body,
-                          fontSize: 13,
-                          lineHeight: 1.75,
-                          color: C.textSec,
-                        }}
-                      >
-                        {p.desc}
-                      </p>
-                      <div
-                        style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
-                      >
-                        {p.tech.map((t) => (
-                          <span key={t} className="tag">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="win-status">
-                      <span>
-                        {" "}
-                        ▶{" "}
-                        {p.gitLab
-                          ? "gitlab.com/Fadwa-Saif"
-                          : "github.com/Fadwa-Saif"}
-                      </span>
-                      <a
-                        href={p.gitLab || p.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ color: C.accentLight, fontWeight: 700 }}
-                      >
-                        OPEN ↗ 
-                      </a>
-                    </div>
+          {/* about */}
+          <Reveal as="section" id="about">
+            <SectionHeading num="01">About</SectionHeading>
+            <div className="about-main">
+              <p>
+                I'm finishing my TS Développement Digital Web Full Stack diploma
+                at ISGI Casablanca (OFPPT), and most of what I've learned since
+                has come from building things I actually wanted to ship.
+              </p>
+              <p>
+                I've pitched a SaaS product to a professional jury and interned
+                on a live ERP build, and I still think the best part of the job
+                is watching something you built actually get used.
+              </p>
+              <div className="tech-grid">
+                {SKILLS.map((g) => (
+                  <div className="tech-cat" key={g.cat}>
+                    <h3>{g.cat}</h3>
+                    <ul>
+                      {g.items.map((i) => (
+                        <li key={i}>{i}</li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>
-            </Win>
-          </div>
-        </section>
+            </div>
+          </Reveal>
 
-        {/* ── EXPERIENCE ── */}
-        <section
-          id="experience"
-          style={{ background: C.bgDeep, padding: "96px 20px" }}
-        >
-          <div
-            data-id="experience"
-            style={{ maxWidth: 900, margin: "0 auto", ...anim("experience") }}
-          >
-            <Label>EXPERIENCE</Label>
-            <H2>Where I've worked</H2>
-            <Win
-              title="TERMINAL — JOJMA_INTERNSHIP"
-              icon="terminal"
-              statusText="bash — internship/jojma_erp"
-              bodyStyle={{
-                background: "#02040a",
-                backgroundImage:
-                  "repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px)",
-              }}
-            >
-              <div className="term-line">
-                fadwa@jojma:~$ cat internship_log.txt
-              </div>
-              <div className="term-line" style={{ color: C.textSec }}>
-                March – April 2026 · Casablanca, Morocco
-              </div>
-              <div
-                className="term-line"
-                style={{ color: C.text, marginBottom: 14 }}
-              >
-                Role: Full Stack Developer Intern
-              </div>
-              {EXP_BULLETS.map((pt) => (
-                <div key={pt} className="term-line">
-                  [OK] {pt}
+          {/* experience */}
+          <Reveal as="section" id="experience">
+            <SectionHeading num="02">Experience</SectionHeading>
+            <ExperienceTabs />
+          </Reveal>
+
+          {/* work */}
+          <Reveal as="section" id="work">
+            <SectionHeading num="03">Work</SectionHeading>
+            <div className="proj-grid">
+              {PROJECTS.map((p) => (
+                <div className="proj-card" key={p.name}>
+                  <div className="proj-top">
+                    <Icon name="folder" size={30} />
+                    <a
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Open ${p.name}`}
+                    >
+                      <Icon name="external" size={20} />
+                    </a>
+                  </div>
+                  <span className="proj-tag">{p.tag}</span>
+                  <h3>{p.name}</h3>
+                  <p>{p.desc}</p>
+                  <div className="proj-tech">
+                    {p.tech.map((t) => (
+                      <span key={t}>{t}</span>
+                    ))}
+                  </div>
                 </div>
               ))}
-              <div className="term-line" style={{ marginTop: 8 }}>
-                fadwa@jojma:~${" "}
-                <span className="boot-cursor" style={{ color: C.led }}>
-                  █
-                </span>
-              </div>
-            </Win>
-          </div>
-        </section>
+            </div>
+          </Reveal>
 
-        {/* ── EDUCATION ── */}
-        <section
-          id="education"
-          style={{ background: C.bgPanel, padding: "96px 20px" }}
-        >
-          <div
-            data-id="education"
-            style={{ maxWidth: 900, margin: "0 auto", ...anim("education") }}
-          >
-            <Label>EDUCATION</Label>
-            <H2>Where I learned</H2>
-            <Win
-              title="SETUP WIZARD — TS_DDWFS.EXE"
-              icon="disk"
-              statusText="Step 3 of 3 — Installation complete."
-            >
-              <h3
-                style={{
-                  fontFamily: T.display,
-                  fontWeight: 700,
-                  fontSize: 16,
-                  marginBottom: 6,
-                  color: C.text,
-                  textTransform: "uppercase",
-                }}
-              >
-                TS Développement Digital Web Full Stack
-              </h3>
-              <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: 12,
-                  marginBottom: 6,
-                  fontFamily: T.mono,
-                  color: C.accentLight,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                }}
-              >
-                ISGI Casablanca — OFPPT
-              </div>
-
-              <div
-                style={{
-                  marginTop: 22,
-                  height: 8,
-                  background: "#03050a",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                }}
-              >
-                <div
-                  style={{
-                    height: "100%",
-                    width: "100%",
-                    background: `linear-gradient(90deg, ${C.accent}, ${C.accentLight})`,
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  fontFamily: T.mono,
-                  fontSize: 10,
-                  marginTop: 6,
-                  color: C.textSec,
-                }}
-              >
-                100% — 9 modules installed
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 10,
-                  marginTop: 24,
-                }}
-              >
+          {/* education */}
+          <Reveal as="section" id="education">
+            <SectionHeading num="04">Education</SectionHeading>
+            <div className="edu-card">
+              <h3>TS Développement Digital Web Full Stack</h3>
+              <p className="org">
+                ISGI Casablanca · OFPPT — 9 modules completed
+              </p>
+              <div className="edu-tags">
                 {EDU_TOPICS.map((t) => (
-                  <div
-                    key={t}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 7,
-                      background: "#0D1119",
-                      border: `1px solid ${C.hairline}`,
-                      borderRadius: 3,
-                      padding: "6px 10px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: 12,
-                        height: 12,
-                        border: `1px solid ${C.led}`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: 9,
-                        color: C.led,
-                        flexShrink: 0,
-                      }}
-                    >
-                      ✓
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: T.mono,
-                        fontSize: 11,
-                        color: C.text,
-                      }}
-                    >
-                      {t}
-                    </span>
-                  </div>
+                  <span key={t}>{t}</span>
                 ))}
               </div>
-            </Win>
-          </div>
-        </section>
+            </div>
+          </Reveal>
 
-        {/* ── CERTIFICATIONS ── */}
-        <section
-          id="certifications"
-          style={{ background: C.bgDeep, padding: "96px 20px" }}
-        >
-          <div
-            data-id="certifications"
-            style={{
-              maxWidth: 900,
-              margin: "0 auto",
-              ...anim("certifications"),
-            }}
-          >
-            <Label>CERTIFICATIONS</Label>
-            <H2>Licenses &amp; Certificates</H2>
-            <Win
-              title="LICENSE_MANAGER.SYS"
-              icon="doc"
-              statusText={`${CERTS.length} licenses found`}
-            >
-              <div className="cert-header">
-                <span>Name</span>
-                <span>Status</span>
-                <span>Date</span>
-              </div>
-              {CERTS.map((cert, i) => (
-                <div key={i} className="cert-row">
-                  <div>
-                    <div
-                      className="cert-name"
-                      style={{
-                        fontFamily: T.display,
-                        fontWeight: 700,
-                        fontSize: 13,
-                        color: C.text,
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {cert.name}
-                    </div>
-                    <div
-                      className="cert-issuer"
-                      style={{
-                        fontFamily: T.mono,
-                        fontSize: 10.5,
-                        color: C.accentLight,
-                        margin: "3px 0",
-                      }}
-                    >
-                      {cert.issuer}
-                    </div>
-                    <div style={{ fontSize: 12, lineHeight: 1.5 }}>
-                      {cert.desc}
-                    </div>
-                    {cert.link && (
-                      <a
-                        href={cert.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          display: "inline-block",
-                          marginTop: 5,
-                          fontSize: 10,
-                          fontWeight: 700,
-                          fontFamily: T.mono,
-                          color: C.accentLight,
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        View ↗
-                      </a>
-                    )}
-                  </div>
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 6 }}
-                  >
-                    <span
-                      style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: "50%",
-                        flexShrink: 0,
-                        background:
-                          cert.status === "issued" ? C.led : "transparent",
-                        border:
-                          cert.status !== "issued"
-                            ? `1.5px solid ${C.ledAmber}`
-                            : "none",
-                        boxShadow:
-                          cert.status === "issued"
-                            ? `0 0 6px ${C.led}`
-                            : "none",
-                      }}
-                    />
-                    <span style={{ fontFamily: T.mono, fontSize: 10.5 }}>
-                      {cert.status === "issued" ? "INSTALLED" : "PENDING"}
-                    </span>
-                  </div>
-                  <div style={{ fontFamily: T.mono, fontSize: 11 }}>
-                    {cert.year}
-                  </div>
+          {/* certifications */}
+          <Reveal as="section" id="certifications">
+            <SectionHeading num="05">Certifications</SectionHeading>
+            {CERTS.map((c) => (
+              <div className="cert-row" key={c.name}>
+                <div>
+                  <h3>{c.name}</h3>
+                  <p className="issuer">{c.issuer}</p>
+                  <p>{c.desc}</p>
+                  {c.link && (
+                    <a href={c.link} target="_blank" rel="noopener noreferrer">
+                      View credential
+                    </a>
+                  )}
                 </div>
-              ))}
-            </Win>
-          </div>
-        </section>
-
-        {/* ── CONTACT ── */}
-        <section
-          id="contact"
-          style={{
-            background: C.bgPanel,
-            padding: "96px 20px",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            aria-hidden
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 520,
-              height: 520,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, ${C.accentGlow} 0%, transparent 70%)`,
-              pointerEvents: "none",
-            }}
-          />
-          <div
-            data-id="contact"
-            style={{
-              maxWidth: 620,
-              margin: "0 auto",
-              position: "relative",
-              zIndex: 1,
-              ...anim("contact"),
-            }}
-          >
-            <Label>CONTACT</Label>
-            <Win
-              title="NEW MESSAGE — CONTACT.SYS"
-              icon="mail"
-              statusText="1 recipient"
-            >
-              <div style={{ textAlign: "center", padding: "8px 0" }}>
-                <div
-                  style={{
-                    width: 56,
-                    height: 56,
-                    margin: "0 auto 20px",
-                    borderRadius: "50%",
-                    background: `radial-gradient(circle at 35% 30%, ${C.accentLight}, ${C.accent})`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: T.display,
-                    fontWeight: 900,
-                    fontSize: 22,
-                    color: "#fff",
-                    boxShadow: `0 0 30px ${C.accentGlow}`,
-                  }}
-                >
-                  @
-                </div>
-                <h2
-                  style={{
-                    fontFamily: T.display,
-                    fontWeight: 900,
-                    fontSize: "clamp(24px, 4.6vw, 36px)",
-                    lineHeight: 1.2,
-                    margin: "0 0 14px",
-                    color: C.text,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  Let's build
-                  <br />
+                <div className="cert-status">
                   <span
-                    style={{
-                      backgroundImage: `linear-gradient(180deg, ${C.accentLight}, ${C.accent})`,
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  >
-                    something together.
-                  </span>
-                </h2>
-                <p
-                  style={{
-                    fontFamily: T.body,
-                    color: C.textSec,
-                    fontSize: 14,
-                    lineHeight: 1.75,
-                    margin: "0 0 30px",
-                  }}
-                >
-                  Open to full-time opportunities, collaborations, and
-                  interesting projects.
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: 12,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <a href="mailto:saiffadoua@email.com" className="btn-primary">
-                    Send Email
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/fadwa-saif-a7280922b/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-ghost"
-                  >
-                    LinkedIn ↗
-                  </a>
-                  <a
-                    href="https://github.com/Fadwa-Saif"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-ghost"
-                  >
-                    GitHub ↗
-                  </a>
+                    className={`dot ${c.status === "issued" ? "on" : "off"}`}
+                  />
+                  {c.status === "issued" ? "Issued" : "Pending"} · {c.date}
                 </div>
               </div>
-            </Win>
-          </div>
-        </section>
-
-        {/* ── FOOTER ── */}
-        <footer
-          style={{
-            background: "#03050a",
-            borderTop: `1px solid ${C.hairline}`,
-            padding: "16px 20px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 10,
-            marginBottom: 46,
-          }}
-        >
-          <span style={{ fontFamily: T.mono, fontSize: 10, color: C.textSec }}>
-            ● SYSTEM READY
-          </span>
-          <span style={{ fontFamily: T.mono, fontSize: 10, color: C.textSec }}>
-            © 2026 FADWA SAIF — ALL RIGHTS RESERVED
-          </span>
-          <div style={{ display: "flex", gap: 18 }}>
-            <a
-              href="https://github.com/Fadwa-Saif"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="fade-link"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://www.linkedin.com/in/fadwa-saif-a7280922b/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="fade-link"
-            >
-              LinkedIn
-            </a>
-          </div>
-        </footer>
-      </div>
-
-      {/* ── TASKBAR ── */}
-      {startOpen && (
-        <div
-          onClick={() => setStartOpen(false)}
-          style={{ position: "fixed", inset: 0, zIndex: 94 }}
-        />
-      )}
-      {startOpen && (
-        <div className="start-menu">
-          <div className="start-menu-rail">
-            <span>SAIF•OS</span>
-          </div>
-          <div className="start-menu-items">
-            {NAV.map((n) => (
-              <button
-                key={n.id}
-                type="button"
-                className="start-menu-item"
-                onClick={() => go(n.id)}
-              >
-                <PixelIcon type={n.icon} size={14} /> {n.label}
-              </button>
             ))}
-            <div className="start-menu-div" />
-            <button
-              type="button"
-              className="start-menu-item"
-              onClick={() => go("desktop")}
-            >
-              <PixelIcon type="disk" size={14} /> Restart Desktop...
-            </button>
-          </div>
-        </div>
-      )}
-      <div className="taskbar">
-        <button
-          type="button"
-          className="start-btn"
-          onClick={() => setStartOpen((s) => !s)}
-        >
-          ⊞ Start
-        </button>
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 2,
-          }}
-        >
-          {DESKTOP_ICONS.map((ic) => (
-            <button
-              key={ic.id}
-              type="button"
-              className="dock-icon"
-              onClick={() =>
-                ic.href
-                  ? window.open(ic.href, "_blank", "noopener,noreferrer")
-                  : go(ic.id)
-              }
-            >
-              <PixelIcon type={ic.icon} size={22} />
-              <span>{ic.label}</span>
-            </button>
-          ))}
-        </div>{" "}
-        <div className="tray">
-          <div className="meter" title="CPU load">
-            <span>CPU</span>
-            <div className="meter-track">
-              <div className="meter-fill" style={{ width: meters.cpu + "%" }} />
+          </Reveal>
+
+          {/* contact */}
+          <Reveal as="section" id="contact">
+            <div className="contact">
+              <p className="kicker">06. What's Next?</p>
+              <h2
+                style={{
+                  fontFamily: SANS,
+                  color: C.white,
+                  fontWeight: 700,
+                  fontSize: "clamp(28px,5vw,44px)",
+                }}
+              >
+                Get In Touch
+              </h2>
+              <p>
+                I'm open to full-time roles, collaborations and interesting
+                problems. The fastest way to reach me is email.
+              </p>
+              <a className="btn" href="mailto:saiffadoua@email.com">
+                Say hello
+              </a>
             </div>
-          </div>
-          <div className="meter" title="Memory load">
-            <span>RAM</span>
-            <div className="meter-track">
-              <div
-                className="meter-fill"
-                style={{ width: meters.ram + "%", background: C.accentLight }}
-              />
-            </div>
-          </div>
-          <span className="tray-clock">{clockStr}</span>
-        </div>
+          </Reveal>
+
+          <footer>Built by Fadwa Saif · 2026</footer>
+        </main>
       </div>
     </>
+  );
+}
+
+function ExperienceTabs() {
+  const [tab, setTab] = useState(0);
+  const job = EXPERIENCE[tab];
+  return (
+    <div className="exp">
+      <div className="tab-list">
+        {EXPERIENCE.map((j, i) => (
+          <button
+            key={j.company}
+            className={i === tab ? "on" : ""}
+            onClick={() => setTab(i)}
+          >
+            {j.company}
+          </button>
+        ))}
+      </div>
+      <div className="exp-panel">
+        <h3>
+          {job.role} <span>@ {job.company}</span>
+        </h3>
+        <p className="range">{job.range}</p>
+        <ul>
+          {job.bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
