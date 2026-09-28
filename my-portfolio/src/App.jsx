@@ -32,7 +32,6 @@ const SOCIALS = [
   { label: "Email", href: "mailto:saiffadoua@gmail.com", icon: "mail" },
 ];
 
-// NOTE: About section content (paragraphs + skills grid) is intentionally left untouched.
 const SKILLS = [
   {
     cat: "Frontend",
@@ -376,11 +375,11 @@ export default function Portfolio() {
 
         .about-main{ max-width:640px; }
         .about-main p + p{ margin-top:16px; }
-        .tech-grid{ display:grid; grid-template-columns:1fr 1fr; gap:28px 32px; margin-top:40px; max-width:640px; }
-        .tech-cat h3{ font-family:${MONO}; font-size:13px; color:${C.ltSlate}; font-weight:500; margin-bottom:10px; }
-        .tech-cat ul{ list-style:none; margin:0; padding:0; }
-        .tech-cat li{ position:relative; padding-left:20px; font-size:14.5px; color:${C.slate}; margin-bottom:8px; }
-        .tech-cat li::before{ content:"▹"; position:absolute; left:0; color:${C.accent}; }
+        .stack-list{ margin-top:28px; max-width:720px; border-bottom:1px solid ${C.lightestNavy}; }
+        .stack-row{ display:grid; grid-template-columns:140px minmax(0,1fr); gap:16px; padding:10px 0; border-top:1px solid ${C.lightestNavy}; }
+        .stack-category h3{ margin:0; color:${C.ltSlate}; font-family:${MONO}; font-size:12px; font-weight:500; }
+        .stack-items{ display:flex; flex-wrap:wrap; align-items:center; list-style:none; margin:0; padding:0; color:${C.slate}; font-size:13px; line-height:1.6; }
+        .stack-items li + li::before{ content:"·"; color:${C.accent}; margin:0 8px; }
 
         .exp{ display:flex; gap:32px; }
         .tab-list{ display:flex; flex-direction:column; border-left:2px solid ${C.lightestNavy}; min-width:160px; }
@@ -439,7 +438,7 @@ export default function Portfolio() {
         @media (max-width:640px){
           .pf{ font-size:16px; }
           section{ padding:70px 0; }
-          .tech-grid{ grid-template-columns:1fr; }
+          .stack-row{ grid-template-columns:110px minmax(0,1fr); gap:10px; padding:9px 0; }
         }
         @media (prefers-reduced-motion: reduce){
           *{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
@@ -531,13 +530,15 @@ export default function Portfolio() {
                 developer. In the meantime, I'm working on side projects and
                 continuing to sharpen my skills.
               </p>
-              <div className="tech-grid">
-                {SKILLS.map((g) => (
-                  <div className="tech-cat" key={g.cat}>
-                    <h3>{g.cat}</h3>
-                    <ul>
-                      {g.items.map((i) => (
-                        <li key={i}>{i}</li>
+              <div className="stack-list" aria-label="Technical skills">
+                {SKILLS.map((group, index) => (
+                  <div className="stack-row" key={group.cat}>
+                    <div className="stack-category">
+                      <h3>{group.cat}</h3>
+                    </div>
+                    <ul className="stack-items">
+                      {group.items.map((item) => (
+                        <li key={item}>{item}</li>
                       ))}
                     </ul>
                   </div>
