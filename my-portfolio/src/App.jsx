@@ -85,11 +85,18 @@ const PROJECTS = [
     link: "https://gitlab.com/Fadwa-Saif/MediCabinet-Projet-de-synthese-FrontEnd",
   },
   {
-    name: "E-Stagiaire",
-    tag: "Academic Project",
-    desc: "An intern management system with full handling of profiles, grades and groups, with separate interfaces for interns and trainers.",
-    tech: ["PHP", "JavaScript", "HTML", "CSS", "MySQL"],
-    link: null,
+    name: "Weather App",
+    tag: "SheCodes Plus Project",
+    desc: "A city weather app with current conditions and a seven-day forecast, including temperature, humidity, and wind speed.",
+    tech: ["JavaScript", "HTML", "CSS", "Axios", "Weather API"],
+    link: "https://github.com/Fadwa-Saif/Weather-app",
+  },
+  {
+    name: "DeliTrack",
+    tag: "Cloud-Native Project",
+    desc: "A delivery-tracking app with separate microservices for authentication, deliveries, clients, and notifications.",
+    tech: ["Microservices", "Docker Compose", "RabbitMQ", "JWT", "RBAC"],
+    link: "https://github.com/Fadwa-Saif/Projet-app-cloud-native-Suivi-de-Livraisons",
   },
 ];
 
@@ -410,12 +417,16 @@ export default function Portfolio() {
         .edu-row h3{ font-family:${SANS}; color:${C.white}; font-size:16px; font-weight:600; }
         .edu-row .org{ font-family:${MONO}; font-size:12px; color:${C.accent}; margin-top:4px; }
         .edu-row .date{ font-family:${MONO}; font-size:12px; color:${C.slate}; white-space:nowrap; }
+        #education .sh{ margin-bottom:30px; }
+        #education .edu-row{ padding:13px 0; }
+        #education .edu-row .org{ margin-top:2px; }
 
-        .cert-row{ display:flex; justify-content:space-between; gap:20px; padding:22px 0; border-bottom:1px solid ${C.lightestNavy}; flex-wrap:wrap; }
+        #certifications{ padding:56px 0; }
+        #certifications .sh{ margin-bottom:20px; }
+        .cert-row{ display:flex; justify-content:space-between; align-items:center; gap:16px; padding:9px 0; border-bottom:1px solid ${C.lightestNavy}; }
         .cert-row:last-child{ border-bottom:none; }
-        .cert-row h3{ font-family:${SANS}; color:${C.white}; font-size:16px; font-weight:600; }
-        .cert-row .issuer{ font-family:${MONO}; font-size:12px; color:${C.accent}; margin:4px 0; }
-        .cert-row p{ font-size:14px; margin-top:4px; max-width:480px; }
+        .cert-row h3{ display:inline; font-family:${SANS}; color:${C.white}; font-size:14px; font-weight:600; }
+        .cert-row .issuer{ display:inline; font-family:${MONO}; font-size:11px; color:${C.accent}; margin-left:10px; }
         .cert-row a{ display:inline-block; margin-top:8px; font-family:${MONO}; font-size:12px; color:${C.slate}; border-bottom:1px solid ${C.slate}; }
         .cert-row a:hover{ color:${C.accent}; border-color:${C.accent}; }
         .cert-status{ display:flex; align-items:center; gap:8px; font-family:${MONO}; font-size:12px; color:${C.slate}; white-space:nowrap; flex-shrink:0; }
@@ -438,7 +449,10 @@ export default function Portfolio() {
         @media (max-width:640px){
           .pf{ font-size:16px; }
           section{ padding:70px 0; }
+          #certifications{ padding:44px 0; }
           .stack-row{ grid-template-columns:110px minmax(0,1fr); gap:10px; padding:9px 0; }
+          .cert-row{ gap:8px; }
+          .cert-row .issuer{ display:block; margin:3px 0 0; }
         }
         @media (prefers-reduced-motion: reduce){
           *{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
@@ -531,7 +545,7 @@ export default function Portfolio() {
                 continuing to sharpen my skills.
               </p>
               <div className="stack-list" aria-label="Technical skills">
-                {SKILLS.map((group, index) => (
+                {SKILLS.map((group) => (
                   <div className="stack-row" key={group.cat}>
                     <div className="stack-category">
                       <h3>{group.cat}</h3>
@@ -609,14 +623,8 @@ export default function Portfolio() {
                 <div>
                   <h3>{c.name}</h3>
                   <p className="issuer">{c.issuer}</p>
-                  <p>{c.desc}</p>
                 </div>
-                <div className="cert-status">
-                  <span
-                    className={`dot ${c.status === "issued" ? "on" : "off"}`}
-                  />
-                  {c.date}
-                </div>
+                <span className="cert-status">{c.date}</span>
               </div>
             ))}
           </Reveal>
