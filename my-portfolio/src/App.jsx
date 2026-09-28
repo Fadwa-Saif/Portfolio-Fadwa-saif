@@ -10,8 +10,6 @@ const C = {
   ltSlate: "#C3D0E8",
   white: "#EAF0FB",
 };
-const AR = "3,64,120"; // accent as r,g,b, for rgba()
-
 const MONO = "'Fira Code', 'SF Mono', 'JetBrains Mono', monospace";
 const SANS = "'Inter', -apple-system, 'Segoe UI', sans-serif";
 
@@ -206,18 +204,45 @@ function Icon({ name, size = 18 }) {
 }
 
 // ─── CURSOR GLOW — soft accent-colored light that follows the mouse ─────────
-function useCursorGlow() {
-  const ref = useRef(null);
+// Accent color as an "R,G,B" string, e.g. "3,64,120" for #034078
+const AR = "3,64,120";
+function CursorGlow() {
+  const glowRef = useRef(null);
+  const target = useRef({ x: 0, y: 0 });
+  const current = useRef({ x: 0, y: 0 });
+  const raf = useRef(null);
+
   useEffect(() => {
-    const el = ref.current;
-    if (!el || window.matchMedia("(pointer: coarse)").matches) return;
-    const move = (e) => {
-      el.style.transform = `translate3d(${e.clientX - 300}px, ${e.clientY - 300}px, 0)`;
+    const handleMove = (e) => {
+      // center the 600px glow on the cursor
+      target.current.x = e.clientX - 300;
+      target.current.y = e.clientY - 300;
     };
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+
+    const animate = () => {
+      // ease factor: lower = more lag/smoothness, higher = snappier
+      const ease = 0.12;
+
+      current.current.x += (target.current.x - current.current.x) * ease;
+      current.current.y += (target.current.y - current.current.y) * ease;
+
+      if (glowRef.current) {
+        glowRef.current.style.transform = `translate3d(${current.current.x}px, ${current.current.y}px, 0)`;
+      }
+
+      raf.current = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("mousemove", handleMove);
+    raf.current = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      cancelAnimationFrame(raf.current);
+    };
   }, []);
-  return ref;
+
+  return <div ref={glowRef} className="cursor-glow" />;
 }
 
 // ─── REVEAL WRAPPER ───────────────────────────────────────────────────────────
@@ -269,7 +294,6 @@ function SectionHeading({ num, children }) {
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 export default function Portfolio() {
   const [active, setActive] = useState("about");
-  const glowRef = useCursorGlow();
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -423,11 +447,10 @@ export default function Portfolio() {
       `}</style>
 
       <div className="pf">
-        <div className="cursor-glow" ref={glowRef} />
+        <CursorGlow />
 
         {/* left rail */}
         <aside className="rail-left">
-          
           <nav className="rail-nav" aria-label="Primary">
             {NAV.map((n) => (
               <button
