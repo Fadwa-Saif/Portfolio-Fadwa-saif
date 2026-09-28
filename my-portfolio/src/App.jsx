@@ -313,8 +313,6 @@ export default function Portfolio() {
 
         /* ── rails ── */
         .rail-left{ position:fixed; left:40px; top:0; bottom:0; width:210px; display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between; padding:48px 0; z-index:20; }
-        .logo{ width:42px; height:42px; border:1px solid ${C.accent}; border-radius:12px; display:flex; align-items:center; justify-content:center; font-family:${MONO}; font-weight:600; color:${C.accent}; font-size:14px; transition:background .25s ease; background:none; }
-        .logo:hover{ background:rgba(${AR},0.15); }
         .rail-nav{ display:flex; flex-direction:column; gap:18px; }
         .rail-nav-item{ display:flex; align-items:baseline; gap:10px; background:none; border:none; border-left:2px solid transparent; padding:4px 6px 4px 14px; cursor:pointer; text-align:left; transition:border-color .25s ease, transform .25s ease; }
         .rail-nav-item .num{ font-family:${MONO}; font-size:12px; color:${C.accent}; }
@@ -429,13 +427,7 @@ export default function Portfolio() {
 
         {/* left rail */}
         <aside className="rail-left">
-          <button
-            className="logo"
-            onClick={() => go("about")}
-            aria-label="Home"
-          >
-            FS
-          </button>
+          
           <nav className="rail-nav" aria-label="Primary">
             {NAV.map((n) => (
               <button
