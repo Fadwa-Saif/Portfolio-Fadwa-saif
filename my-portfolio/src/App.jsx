@@ -107,11 +107,6 @@ const EDUCATION = [
     org: "ISGI Casablanca / UM6P",
     date: "2024 – 2026",
   },
-  {
-    title: "Baccalaureate in Physical Sciences",
-    org: "Lycée Qualifiant Ibn Zoher",
-    date: "2022",
-  },
 ];
 
 const CERTS = [
@@ -119,32 +114,24 @@ const CERTS = [
     name: "Machine Learning Essentials",
     issuer: "Qualifying Training",
     desc: "Fundamentals of Machine Learning: data preprocessing, classification algorithms, and model evaluation.",
-    link: null,
-    status: "issued",
     date: "2026",
   },
   {
     name: "Python Essentials 1",
     issuer: "Cisco",
     desc: "Python fundamentals: data structures, algorithms, and object-oriented programming.",
-    link: "https://www.credly.com/badges/d97adb7d-2547-48a6-b1a2-8d8e271539f3",
-    status: "issued",
     date: "2025",
   },
   {
     name: "SheCodes Plus",
     issuer: "SheCodes",
     desc: "Advanced web development training: HTML5, CSS3, JavaScript, API integration, Git, and GitHub.",
-    link: "https://www.shecodes.io/certificates/704fd72ea1d7c16d7610f1ab0c56a55e",
-    status: "issued",
     date: "2025",
   },
   {
     name: "SheCodes Basics",
     issuer: "SheCodes",
     desc: "Front-end web development: HTML5, CSS3, JavaScript, and responsive design.",
-    link: null,
-    status: "issued",
     date: "2024",
   },
 ];
@@ -490,8 +477,7 @@ export default function Portfolio() {
             <h1>Fadwa Saif.</h1>
             <h2>I build things for the web.</h2>
             <p>
-              I'm a full-stack developer based in Casablanca, Morocco, I build
-              products end to end . <br></br>
+              I'm a full-stack developer based in Casablanca, Morocco <br></br>
               building stuff • breaking things • fixing them better
             </p>
             <div className="hero-socials">
@@ -608,17 +594,12 @@ export default function Portfolio() {
                   <h3>{c.name}</h3>
                   <p className="issuer">{c.issuer}</p>
                   <p>{c.desc}</p>
-                  {c.link && (
-                    <a href={c.link} target="_blank" rel="noopener noreferrer">
-                      View credential
-                    </a>
-                  )}
                 </div>
                 <div className="cert-status">
                   <span
                     className={`dot ${c.status === "issued" ? "on" : "off"}`}
                   />
-                  {c.status === "issued" ? "Issued" : "Pending"} · {c.date}
+                  {c.date}
                 </div>
               </div>
             ))}
