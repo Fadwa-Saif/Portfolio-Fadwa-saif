@@ -85,18 +85,18 @@ const PROJECTS = [
     link: "https://gitlab.com/Fadwa-Saif/MediCabinet-Projet-de-synthese-FrontEnd",
   },
   {
-    name: "Weather App",
-    tag: "SheCodes Plus Project",
-    desc: "A city weather app with current conditions and a seven-day forecast, including temperature, humidity, and wind speed.",
-    tech: ["JavaScript", "HTML", "CSS", "Axios", "Weather API"],
-    link: "https://github.com/Fadwa-Saif/Weather-app",
-  },
-  {
     name: "DeliTrack",
     tag: "Cloud-Native Project",
     desc: "A delivery-tracking app with separate microservices for authentication, deliveries, clients, and notifications.",
     tech: ["Microservices", "Docker Compose", "RabbitMQ", "JWT", "RBAC"],
     link: "https://github.com/Fadwa-Saif/Projet-app-cloud-native-Suivi-de-Livraisons",
+  },
+  {
+    name: "Weather App",
+    tag: "SheCodes Plus Project",
+    desc: "A city weather app with current conditions and a seven-day forecast, including temperature, humidity, and wind speed.",
+    tech: ["JavaScript", "HTML", "CSS", "Axios", "Weather API"],
+    link: "https://github.com/Fadwa-Saif/Weather-app",
   },
 ];
 
